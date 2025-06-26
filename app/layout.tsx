@@ -5,7 +5,7 @@ import { StructuredData } from "@/components/structured-data"
 
 export const metadata: Metadata = {
   title: "Essential Talent Recruitment",
-  description: "We help talented individuals achieve their dreams through study, work, and career opportunities in the UK. From teacher recruitment to online education, we're your trusted partner in success.",
+  description: "We help talented individuals to achieve their dreams through study, work, and career opportunities in the UK. From teacher recruitment to online education, we're your trusted partner in success.",
   generator: "essentialtalent.co",
 }
 
