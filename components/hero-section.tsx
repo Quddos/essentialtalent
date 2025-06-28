@@ -1,11 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Play, Users, GraduationCap, Globe, Award } from "lucide-react"
+import { RegistrationPopup } from "@/components/registration-popup"
+import { Play, Users, GraduationCap, Globe, Award } from "lucide-react"
 
 const stats = [
   { icon: Users, value: "5000+", label: "Students Placed" },
@@ -15,6 +17,8 @@ const stats = [
 ]
 
 export function HeroSection() {
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false)
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Background Pattern */}
@@ -69,16 +73,11 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button
-                asChild
-                size="lg"
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <Link href="/demo">
-                  Book Free Demo Class
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              <RegistrationPopup
+                isOpen={isRegistrationOpen}
+                onClose={() => setIsRegistrationOpen(false)}
+                triggerText="Start Your Journey"
+              />
 
               <Button
                 asChild
@@ -86,9 +85,9 @@ export function HeroSection() {
                 size="lg"
                 className="border-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 bg-transparent"
               >
-                <Link href="#services">
+                <Link href="/demo">
                   <Play className="mr-2 h-5 w-5" />
-                  Watch Our Story
+                  Book Free Demo
                 </Link>
               </Button>
             </motion.div>

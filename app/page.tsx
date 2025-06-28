@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/hero-section"
 import { ServicesSection } from "@/components/services-section"
 import { DemoSection } from "@/components/demo-section"
 import { Footer } from "@/components/footer"
+import { Toaster } from "@/components/ui/toaster"
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
       <ServicesSection />
       <DemoSection />
       <Footer />
+      <Toaster />
     </main>
   )
 }
