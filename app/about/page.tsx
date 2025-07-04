@@ -20,7 +20,7 @@ const pageMetadata = {
     title: "About Essential Talent Recruitment - Our Story & Team",
     description:
       "Discover how Essential Talent Recruitment bridges dreams with opportunities. Meet our founder and expert team dedicated to your UK education and career success.",
-    images: ["/ceo.jpg"],
+    images: ["/ceo.jpeg"],
   },
 }
 
