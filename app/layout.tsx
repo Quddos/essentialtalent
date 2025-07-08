@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
 import { StructuredData } from "@/components/structured-data"
+import { Header } from "@/components/header"
 
 export const metadata: Metadata = {
   title: {
@@ -100,8 +101,8 @@ export default function RootLayout({
 
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* <link rel="icon" href="/icon.svg" type="image/svg+xml" /> */}
+        {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
         <link rel="manifest" href="/manifest.json" />
 
         {/* Theme color */}
@@ -134,6 +135,7 @@ export default function RootLayout({
       </head>
       <body>
         <StructuredData />
+        <Header />
         {children}
       </body>
     </html>

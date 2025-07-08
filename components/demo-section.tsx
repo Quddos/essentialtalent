@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge"
 import { Play, Clock, Users, Star, Gift } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { useState } from "react"
 
 const demoFeatures = [
   {
@@ -147,35 +149,49 @@ export function DemoSection() {
             viewport={{ once: true }}
             className="relative"
           >
-            <Card className="overflow-hidden shadow-2xl">
-              <div className="relative">
-                <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Online demo session"
-                  width={600}
-                  height={400}
-                  className="w-full h-64 object-cover"
-                />
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 cursor-pointer group"
-                >
-                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center group-hover:bg-green-500 transition-colors">
-                    <Play className="w-8 h-8 text-gray-800 group-hover:text-white ml-1" />
+            <Dialog>
+              <DialogTrigger asChild>
+                <div className="relative cursor-pointer group">
+                  <img
+                    src="/hero-students.jpg"
+                    alt="Demo Session Preview"
+                    className="w-full h-64 object-cover rounded-t-lg"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-100 group-hover:bg-black/60 transition">
+                    <button
+                      className="flex items-center justify-center w-16 h-16 bg-white/80 rounded-full shadow-lg hover:bg-white/90 transition"
+                      aria-label="Play Demo Video"
+                    >
+                      <Play className="w-8 h-8 text-green-600" />
+                    </button>
                   </div>
-                </motion.div>
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Watch Sample Demo Session</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  See how our expert tutors deliver personalized education experiences
-                </p>
-                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                  <span>Duration: 45 minutes</span>
-                  <span>Subject: IELTS Preparation</span>
                 </div>
-              </CardContent>
-            </Card>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl p-0 overflow-hidden">
+                <div className="relative w-full aspect-video bg-black">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/nkB_iieAmP0?autoplay=1"
+                    title="Essential Talent Demo Session"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  ></iframe>
+                </div>
+              </DialogContent>
+            </Dialog>
+            <CardContent className="p-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Watch Sample Demo Session</h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                See how our expert tutors deliver personalized education experiences
+              </p>
+              <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <span>Duration: 45 minutes</span>
+                <span>Subject: IELTS Preparation</span>
+              </div>
+            </CardContent>
           </motion.div>
         </div>
       </div>

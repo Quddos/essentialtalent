@@ -13,7 +13,7 @@ import { Linkedin, Users, Target, Globe, Heart } from "lucide-react"
 const pageMetadata = {
   title: "About Us - Essential Talent Recruitment",
   description:
-    "Learn about Essential Talent Recruitment's mission to connect talented individuals with UK education and career opportunities. Meet our founder Dr. Sarah Johnson and our expert team.",
+    "Learn about Essential Talent Recruitment's mission to connect talented individuals with UK education and career opportunities. Meet our founder Eng. Oluwafemi Victoria and our expert team.",
   keywords:
     "about essential talent recruitment, UK education consultancy, international recruitment company, Dr Sarah Johnson CEO, UK immigration experts",
   openGraph: {
@@ -26,9 +26,9 @@ const pageMetadata = {
 
 const teamMembers = [
   {
-    name: "Dr. Sarah Johnson",
+    name: "Eng. Oluwafemi Victoria",
     position: "Chief Executive Officer",
-    image: "/ceo.jpg",
+    image: "/ceo.jpeg",
     linkedin: "https://www.linkedin.com/in/sarah-johnson-ceo",
     bio: "Visionary leader with 15+ years in international education and recruitment.",
   },
@@ -66,6 +66,20 @@ const teamMembers = [
     image: "/placeholder.svg?height=300&width=300",
     linkedin: "https://www.linkedin.com/in/david-thompson-education",
     bio: "Technology-driven educator specializing in online learning platforms.",
+  },
+  {
+    name: "Martin J",
+    position: "Human Resources Director",
+    image: "/Human Resources Director.jpeg",
+    linkedin: "#",
+    bio: "Experienced HR leader dedicated to building strong, diverse teams and supporting talent growth.",
+  },
+  {
+    name: "Jeremiah Johnson",
+    position: "Chief AI Officer",
+    image: "/Chief AI officer.jpeg",
+    linkedin: "#",
+    bio: "AI strategist focused on leveraging technology to drive innovation and operational excellence.",
   },
 ]
 
@@ -112,7 +126,7 @@ export default function AboutPage() {
                 "Leading UK recruitment company helping talented individuals achieve their dreams through study, work, and career opportunities.",
               founder: {
                 "@type": "Person",
-                name: "Dr. Sarah Johnson",
+                name: "Eng. Oluwafemi Victoria",
                 jobTitle: "Chief Executive Officer",
                 image: "https://www.essentialtalent.co/ceo.jpg",
               },
@@ -264,11 +278,11 @@ export default function AboutPage() {
                 <CardContent className="p-0">
                   <div className="grid md:grid-cols-2 gap-0">
                     <div className="relative h-96 md:h-auto">
-                      <Image src="/ceo.jpg" alt="Dr. Sarah Johnson - CEO & Founder" fill className="object-cover" />
+                      <Image src="/ceo.jpeg" alt="Eng. Oluwafemi Victoria - CEO & Founder" fill className="object-cover" />
                     </div>
                     <div className="p-8 md:p-12 flex flex-col justify-center">
                       <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        Dr. Sarah Johnson
+                        Eng. Oluwafemi Victoria
                       </h3>
                       <p className="text-blue-600 dark:text-blue-400 font-semibold mb-4">CEO & Founder</p>
                       <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-6">
