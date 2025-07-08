@@ -63,7 +63,6 @@ const navigation = [
   },
   { name: "About", href: "/about" },
   { name: "Success Stories", href: "/success-stories" },
-  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ]
 
