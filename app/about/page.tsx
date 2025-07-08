@@ -29,56 +29,30 @@ const teamMembers = [
     name: "Eng. Oluwafemi Victoria",
     position: "Chief Executive Officer",
     image: "/ceo.jpeg",
-    linkedin: "https://www.linkedin.com/in/sarah-johnson-ceo",
+    linkedin: "https://www.linkedin.com/in/victoria-oluwafemi-2b19a2280/",
     bio: "Visionary leader with 15+ years in international education and recruitment.",
   },
-  {
-    name: "Michael Chen",
-    position: "Head of UK Study Programs",
-    image: "/placeholder.svg?height=300&width=300",
-    linkedin: "https://www.linkedin.com/in/michael-chen-education",
-    bio: "Expert in UK university partnerships and student placement strategies.",
-  },
-  {
-    name: "Priya Patel",
-    position: "Teacher Recruitment Director",
-    image: "/placeholder.svg?height=300&width=300",
-    linkedin: "https://www.linkedin.com/in/priya-patel-recruitment",
-    bio: "Specialist in connecting qualified teachers with UK educational institutions.",
-  },
-  {
-    name: "James Wilson",
-    position: "Visa & Immigration Consultant",
-    image: "/placeholder.svg?height=300&width=300",
-    linkedin: "https://www.linkedin.com/in/james-wilson-immigration",
-    bio: "Licensed immigration advisor with expertise in UK work and study visas.",
-  },
-  {
-    name: "Fatima Al-Rashid",
-    position: "Student Success Manager",
-    image: "/placeholder.svg?height=300&width=300",
-    linkedin: "https://www.linkedin.com/in/fatima-al-rashid",
-    bio: "Dedicated to ensuring student success throughout their UK journey.",
-  },
-  {
-    name: "David Thompson",
-    position: "Online Education Coordinator",
-    image: "/placeholder.svg?height=300&width=300",
-    linkedin: "https://www.linkedin.com/in/david-thompson-education",
-    bio: "Technology-driven educator specializing in online learning platforms.",
-  },
+  // {
+  //   name: "Michael Chen",
+  //   position: "Head of UK Study Programs",
+  //   image: "/placeholder.svg?height=300&width=300",
+  //   linkedin: "https://www.linkedin.com/in/michael-chen-education",
+  //   bio: "Expert in UK university partnerships and student placement strategies.",
+  // },
+  
+ 
   {
     name: "Martin J",
     position: "Human Resources Director",
-    image: "/Human Resources Director.jpeg",
-    linkedin: "#",
+    image: "/human-resources-director.jpeg",
+    linkedin: "https://www.linkedin.com/in/martin-jhn?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
     bio: "Experienced HR leader dedicated to building strong, diverse teams and supporting talent growth.",
   },
   {
     name: "Jeremiah Johnson",
     position: "Chief AI Officer",
-    image: "/Chief AI officer.jpeg",
-    linkedin: "#",
+    image: "/chief-ai-officer.jpeg",
+    linkedin: "https://www.linkedin.com/in/jay-johnson1/",
     bio: "AI strategist focused on leveraging technology to drive innovation and operational excellence.",
   },
 ]
@@ -92,12 +66,12 @@ const companyValues = [
   },
   {
     icon: Heart,
-    title: "Integrity",
+    title: "Trust",
     description: "We operate with complete transparency and honesty, building trust through ethical practices.",
   },
   {
     icon: Globe,
-    title: "Global Reach",
+    title: "Reaching Global ",
     description: "We connect talent across borders, creating opportunities that transcend geographical boundaries.",
   },
   {
@@ -206,7 +180,8 @@ export default function AboutPage() {
                 className="relative"
               >
                 <Image
-                  src="/placeholder.svg?height=500&width=600"
+                  // src="/placeholder.svg?height=500&width=600"
+                  src="/aboutus.jpg"
                   alt="Essential Talent Recruitment office"
                   width={600}
                   height={500}
@@ -298,7 +273,7 @@ export default function AboutPage() {
                         </p>
                       </div>
                       <Button asChild variant="outline" className="w-fit bg-transparent">
-                        <Link href="https://www.linkedin.com/in/sarah-johnson-ceo" target="_blank">
+                        <Link href="https://www.linkedin.com/in/victoria-oluwafemi-2b19a2280/" target="_blank">
                           <Linkedin className="mr-2 h-4 w-4" />
                           Connect on LinkedIn
                         </Link>
