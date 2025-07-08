@@ -204,7 +204,7 @@ export default function AboutPage() {
             >
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Core Values</h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                These principles guide everything we do and shape our commitment to excellence
+                These principles guide everything we do and shape our commitment to excellence.
               </p>
             </motion.div>
 
