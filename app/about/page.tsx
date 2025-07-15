@@ -32,13 +32,13 @@ const teamMembers = [
     linkedin: "https://www.linkedin.com/in/victoria-oluwafemi-2b19a2280/",
     bio: "Visionary leader with 15+ years in international education and recruitment.",
   },
-  // {
-  //   name: "Michael Chen",
-  //   position: "Head of UK Study Programs",
-  //   image: "/placeholder.svg?height=300&width=300",
-  //   linkedin: "https://www.linkedin.com/in/michael-chen-education",
-  //   bio: "Expert in UK university partnerships and student placement strategies.",
-  // },
+  {
+    name: "Samira Baruwo",
+    position: "Business Strategy and Marketing Officer",
+    image: "/oversea-consultant.jpeg",
+    linkedin: "https://www.linkedin.com/in/samira-bawuro-1b1592156?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+    bio: "Expert in UK university partnerships and student placement strategies.",
+  },
   
  
   {

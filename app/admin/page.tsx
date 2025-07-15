@@ -98,33 +98,26 @@ const recentApplications = [
   },
 ]
 
-const demoBookings = [
-  {
-    id: "1",
-    name: "Michael Chen",
-    email: "michael@example.com",
-    phone: "+44 7123 456789",
-    service: "UK Study Programs",
-    date: "2024-01-20",
-    time: "10:00 AM",
-    status: "confirmed",
-  },
-  {
-    id: "2",
-    name: "Lisa Wang",
-    email: "lisa@example.com",
-    phone: "+44 7987 654321",
-    service: "Teacher Recruitment",
-    date: "2024-01-21",
-    time: "2:00 PM",
-    status: "pending",
-  },
-]
+// Fetch demo bookings from API
+function useDemoBookings() {
+  const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    fetch("/api/demo-bookings")
+      .then(res => res.json())
+      .then(data => {
+        setBookings(data)
+        setLoading(false)
+      })
+  }, [])
+  return { bookings, loading }
+}
 
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loginForm, setLoginForm] = useState({ email: "", password: "" })
   const [searchTerm, setSearchTerm] = useState("")
+  const { bookings: demoBookings, loading: bookingsLoading } = useDemoBookings()
 
   // Check authentication on component mount
   useEffect(() => {
@@ -357,48 +350,27 @@ export default function AdminDashboard() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Student</TableHead>
-                      <TableHead>Contact</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Phone</TableHead>
                       <TableHead>Service</TableHead>
-                      <TableHead>Date & Time</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Time</TableHead>
+                      <TableHead>Message</TableHead>
+                      <TableHead>Created At</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {demoBookings.map((booking) => (
+                    {demoBookings.map((booking: any) => (
                       <TableRow key={booking.id}>
-                        <TableCell className="font-medium">{booking.name}</TableCell>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center text-sm">
-                              <Mail className="h-3 w-3 mr-1" />
-                              {booking.email}
-                            </div>
-                            <div className="flex items-center text-sm">
-                              <Phone className="h-3 w-3 mr-1" />
-                              {booking.phone}
-                            </div>
-                          </div>
-                        </TableCell>
+                        <TableCell>{booking.name}</TableCell>
+                        <TableCell>{booking.email}</TableCell>
+                        <TableCell>{booking.phone}</TableCell>
                         <TableCell>{booking.service}</TableCell>
-                        <TableCell>
-                          <div>
-                            <p>{booking.date}</p>
-                            <p className="text-sm text-gray-600">{booking.time}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>{getStatusBadge(booking.status)}</TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
+                        <TableCell>{booking.date}</TableCell>
+                        <TableCell>{booking.time}</TableCell>
+                        <TableCell>{booking.message}</TableCell>
+                        <TableCell>{new Date(booking.created_at).toLocaleString()}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

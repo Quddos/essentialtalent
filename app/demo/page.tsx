@@ -56,24 +56,42 @@ export default function DemoPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    toast({
-      title: "Demo Booked Successfully! 🎉",
-      description: "We'll send you a confirmation email with the meeting details shortly.",
-    })
-
+    try {
+      const res = await fetch("/api/demo-bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+      if (res.ok) {
+        toast({
+          title: "Demo Booked Successfully! 🎉",
+          description: "We'll send you a confirmation email with the meeting details shortly.",
+        })
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          date: "",
+          time: "",
+          message: "",
+        })
+      } else {
+        const data = await res.json()
+        toast({
+          title: "Booking Failed",
+          description: data.error || "Something went wrong. Please try again.",
+          variant: "destructive",
+        })
+      }
+    } catch (err) {
+      toast({
+        title: "Booking Failed",
+        description: "Network error. Please try again.",
+        variant: "destructive",
+      })
+    }
     setIsSubmitting(false)
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      service: "",
-      date: "",
-      time: "",
-      message: "",
-    })
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -82,7 +100,7 @@ export default function DemoPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <Header />
+      
 
       <main className="container mx-auto px-4 py-20">
         <motion.div
