@@ -26,6 +26,8 @@ import {
   Filter,
   Search,
 } from "lucide-react"
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Mock data for demonstration
 const dashboardStats = [
@@ -118,6 +120,23 @@ export default function AdminDashboard() {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" })
   const [searchTerm, setSearchTerm] = useState("")
   const { bookings: demoBookings, loading: bookingsLoading } = useDemoBookings()
+  const [showAddAdmin, setShowAddAdmin] = useState(false)
+  const [adminEmail, setAdminEmail] = useState("")
+  const [adminPassword, setAdminPassword] = useState("")
+  const [addAdminError, setAddAdminError] = useState("")
+  const [addAdminSuccess, setAddAdminSuccess] = useState("")
+  const [applications, setApplications] = useState([])
+  const [applicationsLoading, setApplicationsLoading] = useState(true)
+  useEffect(() => {
+    fetch("/api/applications")
+      .then(res => res.json())
+      .then(data => {
+        setApplications(data)
+        setApplicationsLoading(false)
+      })
+  }, [])
+  const [currentAdmin, setCurrentAdmin] = useState<{ email: string; role: string } | null>(null)
+  const [adminUsers, setAdminUsers] = useState<any[]>([])
 
   // Check authentication on component mount
   useEffect(() => {
@@ -127,14 +146,32 @@ export default function AdminDashboard() {
     }
   }, [])
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Simple authentication check (in production, use proper authentication)
-    if (loginForm.email === "admin@essentialtalent.co" && loginForm.password === "admin123") {
-      localStorage.setItem("adminToken", "admin-authenticated")
-      setIsAuthenticated(true)
+  // Fetch current admin info after login
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch(`/api/admin/users?email=${loginForm.email}`)
+        .then(res => res.json())
+        .then(data => setCurrentAdmin(data))
+      fetch('/api/admin/users')
+        .then(res => res.json())
+        .then(setAdminUsers)
+    }
+  }, [isAuthenticated])
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // Call the API to check credentials
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: loginForm.email, password: loginForm.password }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      localStorage.setItem("adminToken", "admin-authenticated");
+      setIsAuthenticated(true);
     } else {
-      alert("Invalid credentials. Use admin@essentialtalent.co / admin123")
+      alert(data.error || "Invalid credentials.");
     }
   }
 
@@ -440,6 +477,172 @@ export default function AdminDashboard() {
           </TabsContent>
         </Tabs>
       </div>
+      <div className="container mx-auto py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">Admin Users</h2>
+          {currentAdmin?.email === "superadmin@essentialtalent.co" && (
+            <Button onClick={() => setShowAddAdmin(true)} className="bg-blue-600 text-white">Add Admin User</Button>
+          )}
+        </div>
+        {/* Admin Users Table */}
+        <div className="overflow-x-auto mb-8">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Email</TableHead>
+                <TableHead>Role</TableHead>
+                {currentAdmin?.email === "superadmin@essentialtalent.co" && <TableHead>Change Role</TableHead>}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {adminUsers.map((user: any) => (
+                <TableRow key={user.email}>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  {currentAdmin?.email === "superadmin@essentialtalent.co" && (
+                    <TableCell>
+                      <Select
+                        value={user.role}
+                        onValueChange={async (newRole) => {
+                          await fetch('/api/admin/users', {
+                            method: 'PATCH',
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'x-admin-email': currentAdmin.email,
+                            },
+                            body: JSON.stringify({ email: user.email, role: newRole }),
+                          })
+                          setAdminUsers((prev) => prev.map((u) => u.email === user.email ? { ...u, role: newRole } : u))
+                        }}
+                        disabled={user.email === "superadmin@essentialtalent.co"}
+                      >
+                        <SelectTrigger className="w-32">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="admin">admin</SelectItem>
+                          <SelectItem value="superadmin">superadmin</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <Dialog open={showAddAdmin} onOpenChange={setShowAddAdmin}>
+          <DialogContent>
+            <h3 className="text-lg font-bold mb-4">Add Admin User</h3>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault()
+                setAddAdminError("")
+                setAddAdminSuccess("")
+                const res = await fetch("/api/admin/users", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-admin-email": currentAdmin?.email || "",
+                  },
+                  body: JSON.stringify({ email: adminEmail, password: adminPassword }),
+                })
+                const data = await res.json()
+                if (data.success) {
+                  setAddAdminSuccess("Admin user added successfully!")
+                  setAdminEmail("")
+                  setAdminPassword("")
+                  // Refresh admin users list
+                  fetch('/api/admin/users').then(res => res.json()).then(setAdminUsers)
+                } else {
+                  setAddAdminError(data.error || "Failed to add admin user")
+                }
+              }}
+              className="space-y-4"
+            >
+              <Input
+                type="email"
+                placeholder="Admin Email"
+                value={adminEmail}
+                onChange={e => setAdminEmail(e.target.value)}
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={adminPassword}
+                onChange={e => setAdminPassword(e.target.value)}
+                required
+              />
+              {addAdminError && <div className="text-red-500 text-sm">{addAdminError}</div>}
+              {addAdminSuccess && <div className="text-green-600 text-sm">{addAdminSuccess}</div>}
+              <Button type="submit" className="w-full bg-blue-600 text-white">Add Admin</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+        {/* Applications Section */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold mb-4">User Applications</h2>
+          {applicationsLoading ? (
+            <div className="text-center py-8 text-gray-500">Loading applications...</div>
+          ) : applications.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">No applications found.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Country</TableHead>
+                    <TableHead>Program</TableHead>
+                    <TableHead>Documents</TableHead>
+                    <TableHead>Submitted</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {applications.map((app: any) => (
+                    <TableRow key={app.id}>
+                      <TableCell>{app.full_name}</TableCell>
+                      <TableCell>{app.email}</TableCell>
+                      <TableCell>{app.phone_number}</TableCell>
+                      <TableCell>{app.country}</TableCell>
+                      <TableCell>{app.bachelor_program || app.graduate_program || "-"}</TableCell>
+                      <TableCell>
+                        {/* TODO: Fetch and list documents for this application, with download links */}
+                        <ApplicationDocuments applicationId={app.id} />
+                      </TableCell>
+                      <TableCell>{new Date(app.created_at).toLocaleString()}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
+  )
+}
+
+function ApplicationDocuments({ applicationId }: { applicationId: number }) {
+  const [docs, setDocs] = useState<any[]>([])
+  useEffect(() => {
+    fetch(`/api/application-documents?applicationId=${applicationId}`)
+      .then(res => res.json())
+      .then(setDocs)
+  }, [applicationId])
+  if (!docs.length) return <span>No documents</span>
+  return (
+    <ul className="space-y-1">
+      {docs.map(doc => (
+        <li key={doc.id}>
+          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+            {doc.file_name}
+          </a>
+        </li>
+      ))}
+    </ul>
   )
 }

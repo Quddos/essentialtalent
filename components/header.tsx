@@ -29,6 +29,7 @@ import {
   Plane,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { StartApplicationButton } from "@/components/ui/start-application-button"
 
 const navigation = [
   {
@@ -196,9 +197,7 @@ export function Header() {
 
             {/* CTA Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-              <Button asChild variant="outline" size="sm">
-                <Link href="/contact">Get Started</Link>
-              </Button>
+              <StartApplicationButton className="bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold" />
               <Button asChild size="sm" className="bg-gradient-to-r from-blue-600 to-blue-700">
                 <Link href="/demo">Book Free Demo</Link>
               </Button>
