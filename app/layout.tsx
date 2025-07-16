@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { StructuredData } from "@/components/structured-data"
 import { Header } from "@/components/header"
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: {
@@ -88,56 +89,58 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en-GB">
-      <head>
-        <link rel="canonical" href="https://www.essentialtalent.co" />
-        <link rel="alternate" hrefLang="en-gb" href="https://www.essentialtalent.co" />
-        <link rel="alternate" hrefLang="en" href="https://www.essentialtalent.co" />
-        <link rel="alternate" hrefLang="x-default" href="https://www.essentialtalent.co" />
+    <ClerkProvider>
+      <html lang="en-GB">
+        <head>
+          <link rel="canonical" href="https://www.essentialtalent.co" />
+          <link rel="alternate" hrefLang="en-gb" href="https://www.essentialtalent.co" />
+          <link rel="alternate" hrefLang="en" href="https://www.essentialtalent.co" />
+          <link rel="alternate" hrefLang="x-default" href="https://www.essentialtalent.co" />
 
-        {/* Preconnect to external domains */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          {/* Preconnect to external domains */}
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        {/* <link rel="icon" href="/icon.svg" type="image/svg+xml" /> */}
-        {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
-        <link rel="manifest" href="/manifest.json" />
+          {/* Favicon */}
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+          {/* <link rel="icon" href="/icon.svg" type="image/svg+xml" /> */}
+          {/* <link rel="apple-touch-icon" href="/apple-touch-icon.png" /> */}
+          <link rel="manifest" href="/manifest.json" />
 
-        {/* Theme color */}
-        <meta name="theme-color" content="#2563eb" />
-        <meta name="msapplication-TileColor" content="#2563eb" />
+          {/* Theme color */}
+          <meta name="theme-color" content="#2563eb" />
+          <meta name="msapplication-TileColor" content="#2563eb" />
 
-        {/* Additional meta tags */}
-        <meta name="geo.region" content="GB-LND" />
-        <meta name="geo.placename" content="London" />
-        <meta name="geo.position" content="51.5074;-0.1278" />
-        <meta name="ICBM" content="51.5074, -0.1278" />
+          {/* Additional meta tags */}
+          <meta name="geo.region" content="GB-LND" />
+          <meta name="geo.placename" content="London" />
+          <meta name="geo.position" content="51.5074;-0.1278" />
+          <meta name="ICBM" content="51.5074, -0.1278" />
 
-        {/* Business information */}
-        <meta name="contact" content="contact@essentialtalent.co" />
-        <meta name="reply-to" content="contact@essentialtalent.co" />
-        <meta name="owner" content="Essential Talent Recruitment Ltd" />
-        <meta name="url" content="https://www.essentialtalent.co" />
-        <meta name="identifier-URL" content="https://www.essentialtalent.co" />
-        <meta name="directory" content="submission" />
-        <meta name="category" content="Education, Recruitment, Immigration Services" />
-        <meta name="coverage" content="Worldwide" />
-        <meta name="distribution" content="Global" />
-        <meta name="rating" content="General" />
-        <meta name="revisit-after" content="7 days" />
-        <meta name="target" content="all" />
-        <meta name="HandheldFriendly" content="True" />
-        <meta name="MobileOptimized" content="320" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      </head>
-      <body>
-        <StructuredData />
-        <Header />
-        {children}
-      </body>
-    </html>
+          {/* Business information */}
+          <meta name="contact" content="contact@essentialtalent.co" />
+          <meta name="reply-to" content="contact@essentialtalent.co" />
+          <meta name="owner" content="Essential Talent Recruitment Ltd" />
+          <meta name="url" content="https://www.essentialtalent.co" />
+          <meta name="identifier-URL" content="https://www.essentialtalent.co" />
+          <meta name="directory" content="submission" />
+          <meta name="category" content="Education, Recruitment, Immigration Services" />
+          <meta name="coverage" content="Worldwide" />
+          <meta name="distribution" content="Global" />
+          <meta name="rating" content="General" />
+          <meta name="revisit-after" content="7 days" />
+          <meta name="target" content="all" />
+          <meta name="HandheldFriendly" content="True" />
+          <meta name="MobileOptimized" content="320" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        </head>
+        <body>
+          <StructuredData />
+          <Header />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
