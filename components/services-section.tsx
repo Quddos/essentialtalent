@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, Users, Globe, BookOpen, Briefcase, Video, ArrowRight, CheckCircle } from "lucide-react"
+import { GraduationCap, Users, Globe, BookOpen, Briefcase, Video, ArrowRight, CheckCircle, FlaskConical } from "lucide-react"
 import Link from "next/link"
 
 const services = [
@@ -49,6 +49,21 @@ const services = [
     features: ["Global Partnerships", "Cultural Integration", "Language Support", "Ongoing Support"],
     color: "from-indigo-500 to-indigo-600",
   },
+  // {
+  //   icon: FlaskConical,
+  //   title: "Tutoring & Consulting: GCSE & A Level STEM Courses & Exams",
+  //   description:
+  //     "Expert guidance and personalized tutoring for GCSE and A Level STEM subjects. We help students excel in exams, master coursework, and build a strong foundation in science, technology, engineering, and mathematics.",
+  //   features: [
+  //     "1-on-1 STEM Tutoring",
+  //     "GCSE & A Level Exam Prep",
+  //     "Coursework & Revision Support",
+  //     "Consulting for Academic Success",
+  //     "Maths, Physics, Chemistry, Biology",
+  //     "Study Skills & Motivation"
+  //   ],
+  //   color: "from-pink-500 to-purple-600",
+  // },
 ]
 
 export function ServicesSection() {
