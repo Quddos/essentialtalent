@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
 
+if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
 const sql = neon(process.env.DATABASE_URL);
 
-export async function POST(req) {
+export async function POST(req: Request) {
   const data = await req.json();
   const result = await sql`
     INSERT INTO applications (
@@ -21,4 +22,12 @@ export async function POST(req) {
 export async function GET() {
   const applications = await sql`SELECT * FROM applications ORDER BY created_at DESC`;
   return NextResponse.json(applications);
+}
+
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
+  if (!id) return NextResponse.json({ error: 'Missing id' }, { status: 400 });
+  await sql`DELETE FROM applications WHERE id = ${id}`;
+  return NextResponse.json({ success: true });
 } 

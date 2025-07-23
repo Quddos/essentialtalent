@@ -13,7 +13,7 @@ export async function POST(req) {
   if (!file || !applicationId) {
     return NextResponse.json({ error: 'Missing file or applicationId' }, { status: 400 });
   }
-  const blob = await put((file as File).name, file, { access: 'public' });
+  const blob = await put((file as File).name, file, { access: 'public', addRandomSuffix: true });
   await sql`INSERT INTO application_documents (application_id, file_url, file_name) VALUES (${applicationId}, ${blob.url}, ${(file as File).name})`;
   return NextResponse.json({ url: blob.url });
 } 

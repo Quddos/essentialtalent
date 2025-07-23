@@ -26,8 +26,10 @@ import {
   Filter,
   Search,
 } from "lucide-react"
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+// @ts-ignore
+import * as XLSX from 'xlsx';
 
 // Mock data for demonstration
 const dashboardStats = [
@@ -61,44 +63,7 @@ const dashboardStats = [
   },
 ]
 
-const recentApplications = [
-  {
-    id: "1",
-    name: "John Smith",
-    email: "john@example.com",
-    service: "UK Study Programs",
-    status: "pending",
-    date: "2024-01-15",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "2",
-    name: "Sarah Johnson",
-    email: "sarah@example.com",
-    service: "Teacher Recruitment",
-    status: "approved",
-    date: "2024-01-14",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "3",
-    name: "Ahmed Hassan",
-    email: "ahmed@example.com",
-    service: "Visa Assistance",
-    status: "in-review",
-    date: "2024-01-13",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "4",
-    name: "Priya Patel",
-    email: "priya@example.com",
-    service: "Online Tutoring",
-    status: "approved",
-    date: "2024-01-12",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-]
+// Remove the recentApplications array
 
 // Fetch demo bookings from API
 function useDemoBookings() {
@@ -118,7 +83,8 @@ function useDemoBookings() {
 export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loginForm, setLoginForm] = useState({ email: "", password: "" })
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const { bookings: demoBookings, loading: bookingsLoading } = useDemoBookings()
   const [showAddAdmin, setShowAddAdmin] = useState(false)
   const [adminEmail, setAdminEmail] = useState("")
@@ -137,6 +103,7 @@ export default function AdminDashboard() {
   }, [])
   const [currentAdmin, setCurrentAdmin] = useState<{ email: string; role: string } | null>(null)
   const [adminUsers, setAdminUsers] = useState<any[]>([])
+  const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
 
   // Check authentication on component mount
   useEffect(() => {
@@ -193,6 +160,22 @@ export default function AdminDashboard() {
     return <Badge className={config.color}>{config.label}</Badge>
   }
 
+  const handleDelete = async (id: number) => {
+    if (!window.confirm('Are you sure you want to delete this application?')) return;
+    await fetch(`/api/applications?id=${id}`, { method: 'DELETE' });
+    setApplications(applications.filter((app: any) => app.id !== id));
+  };
+  const handleEdit = (application: any) => {
+    // Placeholder for edit logic
+  };
+
+  const handleExportExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(applications);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Applications');
+    XLSX.writeFile(wb, 'applications.xlsx');
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -243,6 +226,16 @@ export default function AdminDashboard() {
       </div>
     )
   }
+
+  const filteredApplications = applications.filter((app: any) => {
+    const matchesSearch =
+      app.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (app.bachelor_program?.toLowerCase().includes(searchTerm.toLowerCase()) || "") ||
+      (app.graduate_program?.toLowerCase().includes(searchTerm.toLowerCase()) || "");
+    const matchesStatus = statusFilter === "all" ? true : (app.status || "pending") === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -310,7 +303,7 @@ export default function AdminDashboard() {
                       <Filter className="h-4 w-4 mr-2" />
                       Filter
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={handleExportExcel}>
                       <Download className="h-4 w-4 mr-2" />
                       Export
                     </Button>
@@ -326,6 +319,19 @@ export default function AdminDashboard() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="max-w-sm"
                   />
+                  <Select value={statusFilter} onValueChange={v => setStatusFilter(v)}>
+                    <SelectTrigger className="w-32 ml-2">
+                      <SelectValue placeholder="All Statuses" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Statuses</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                      <SelectItem value="in-review">In Review</SelectItem>
+                      <SelectItem value="confirmed">Confirmed</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <Table>
                   <TableHeader>
@@ -338,32 +344,32 @@ export default function AdminDashboard() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {recentApplications.map((application) => (
-                      <TableRow key={application.id}>
+                    {filteredApplications.map((application: any) => (
+                      <TableRow key={application.id} onClick={() => setSelectedApplication(application)} className="cursor-pointer">
                         <TableCell>
                           <div className="flex items-center space-x-3">
                             <Avatar>
-                              <AvatarImage src={application.avatar || "/placeholder.svg"} />
-                              <AvatarFallback>{application.name.charAt(0)}</AvatarFallback>
+                              <AvatarImage src={"/placeholder.svg"} />
+                              <AvatarFallback>{application.full_name?.charAt(0) || "-"}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{application.name}</p>
+                              <p className="font-medium">{application.full_name}</p>
                               <p className="text-sm text-gray-600">{application.email}</p>
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>{application.service}</TableCell>
-                        <TableCell>{getStatusBadge(application.status)}</TableCell>
-                        <TableCell>{application.date}</TableCell>
+                        <TableCell>{application.bachelor_program || application.graduate_program || "-"}</TableCell>
+                        <TableCell>{getStatusBadge(application.status || "pending")}</TableCell>
+                        <TableCell>{new Date(application.created_at).toLocaleDateString()}</TableCell>
                         <TableCell>
                           <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" onClick={e => { e.stopPropagation(); setSelectedApplication(application); }}>
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" onClick={e => { e.stopPropagation(); handleEdit(application); }}>
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm">
+                            <Button variant="ghost" size="sm" onClick={e => { e.stopPropagation(); handleDelete(application.id); }}>
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
@@ -622,6 +628,32 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+      <Dialog open={!!selectedApplication} onOpenChange={() => setSelectedApplication(null)}>
+        <DialogContent>
+          {selectedApplication && (
+            <div>
+              <DialogTitle>Application Details</DialogTitle>
+              <div className="mb-4">
+                <p><strong>Name:</strong> {selectedApplication.full_name}</p>
+                <p><strong>Email:</strong> {selectedApplication.email}</p>
+                <p><strong>Phone:</strong> {selectedApplication.phone_number}</p>
+                <p><strong>Country:</strong> {selectedApplication.country}</p>
+                <p><strong>Program:</strong> {selectedApplication.bachelor_program || selectedApplication.graduate_program || "-"}</p>
+                {/* Add more fields as needed */}
+              </div>
+              {/* Placeholder for file download */}
+              <div className="mb-4">
+                <ApplicationDocuments applicationId={selectedApplication.id} />
+              </div>
+              {/* Print and Close buttons */}
+              <div className="flex space-x-2">
+                <Button onClick={() => window.print()}>Print as PDF</Button>
+                <Button variant="outline" onClick={() => setSelectedApplication(null)}>Close</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
@@ -638,8 +670,8 @@ function ApplicationDocuments({ applicationId }: { applicationId: number }) {
     <ul className="space-y-1">
       {docs.map(doc => (
         <li key={doc.id}>
-          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-            {doc.file_name}
+          <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline font-semibold">
+            {doc.file_name} (Download)
           </a>
         </li>
       ))}
