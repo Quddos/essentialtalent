@@ -121,7 +121,7 @@ export function ServicesSection() {
                     variant="outline"
                     className="w-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900 transition-colors"
                   >
-                    <Link href="/services" className="flex items-center justify-center">
+                    <Link href="#" className="flex items-center justify-center">
                       Learn More
                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>

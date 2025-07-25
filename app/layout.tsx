@@ -7,8 +7,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: {
-    default: "Essential Talent Recruitment - UK Education & Career Opportunities",
-    template: "%s | Essential Talent Recruitment",
+    default: "Essential Talents Recruitment - UK Education & Career Opportunities",
+    template: "%s | Essential Talents Recruitment",
   },
   description:
     "Leading UK recruitment company helping talented individuals achieve their dreams through study, work, and career opportunities. Expert teacher recruitment, visa assistance, and online education services.",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "UK education consultancy",
     "Essential Talent Recruitment",
   ],
-  authors: [{ name: "Essential Talent Recruitment Ltd" }],
+  authors: [{ name: "Essential Talents Recruitment Ltd" }],
   creator: "Essential Talent Recruitment Ltd",
   publisher: "Essential Talent Recruitment Ltd",
   formatDetection: {

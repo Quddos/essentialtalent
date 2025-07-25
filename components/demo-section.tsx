@@ -108,7 +108,7 @@ export function DemoSection() {
                 size="lg"
                 className="border-2 border-blue-500 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 px-8 py-4 text-lg"
               >
-                <Link href="/contact">Learn More</Link>
+                <Link href="#">Learn More</Link>
               </Button>
             </motion.div>
 

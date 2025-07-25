@@ -38,25 +38,25 @@ const navigation = [
     children: [
       {
         name: "UK Study Programs",
-        href: "/services/study-programs",
+        href: "#",
         description: "Complete support for UK university applications and admissions",
         icon: GraduationCap,
       },
       {
         name: "Teacher Recruitment",
-        href: "/services/teacher-recruitment",
+        href: "#",
         description: "Professional teacher placement services for UK schools",
         icon: Users,
       },
       {
         name: "Visa Assistance",
-        href: "/services/visa-assistance",
+        href: "#",
         description: "Expert guidance for UK student and work visa applications",
         icon: FileText,
       },
       {
         name: "Online Tutoring",
-        href: "/services/online-tutoring",
+        href: "#",
         description: "Personalized online education and exam preparation",
         icon: BookOpen,
       },
@@ -64,14 +64,8 @@ const navigation = [
   },
   { name: "About", href: "/about" },
   { name: "Success Stories", href: "/success-stories" },
-  { name: "Contact", href: "/contact" },
-  { name: "Blog", href: "#" },
-  { name: "Careers", href: "#" },
-  { name: "FAQ", href: "#" },
-  { name: "Help Center", href: "#" },
-  { name: "Privacy Policy", href: "#" },
-  { name: "Terms of Service", href: "#" },
-]
+ 
+];
 
 const quickLinks = [
   { name: "Free Demo", href: "/demo", icon: Award },
