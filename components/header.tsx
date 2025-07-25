@@ -65,13 +65,19 @@ const navigation = [
   { name: "About", href: "/about" },
   { name: "Success Stories", href: "/success-stories" },
   { name: "Contact", href: "/contact" },
+  { name: "Blog", href: "#" },
+  { name: "Careers", href: "#" },
+  { name: "FAQ", href: "#" },
+  { name: "Help Center", href: "#" },
+  { name: "Privacy Policy", href: "#" },
+  { name: "Terms of Service", href: "#" },
 ]
 
 const quickLinks = [
   { name: "Free Demo", href: "/demo", icon: Award },
   { name: "Apply Now", href: "/apply", icon: UserCheck },
-  { name: "UK Guide", href: "/uk-guide", icon: Globe },
-  { name: "Visa Check", href: "/visa-check", icon: Plane },
+  { name: "UK Guide", href: "#", icon: Globe },
+  { name: "Visa Check", href: "#", icon: Plane },
 ]
 
 export function Header() {

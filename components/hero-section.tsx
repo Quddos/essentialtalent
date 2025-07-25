@@ -75,12 +75,12 @@ export function HeroSection() {
             >
               <Button
                 asChild
-                variant="primary"
+                variant="default"
                 size="lg"
                 className="font-bold"
               >
                 <Link href="/application">
-                  Start Your Journey
+                  Start your application
                 </Link>
               </Button>
 
@@ -90,9 +90,9 @@ export function HeroSection() {
                 size="lg"
                 className="border-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 bg-transparent"
               >
-                <Link href="/application">
+                <Link href="/demo">
                   <Play className="mr-2 h-5 w-5" />
-                  Start your application
+                  Book Free Session
                 </Link>
               </Button>
             </motion.div>
