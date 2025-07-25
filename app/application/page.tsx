@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -45,6 +45,26 @@ export default function ApplicationFormPage() {
   const [passportFiles, setPassportFiles] = useState<File[]>([]);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
   const router = useRouter();
+
+  // On mount, if signed out, store intended path
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.hasOwnProperty('Clerk') && !(window as any).Clerk?.user) {
+      localStorage.setItem('redirectAfterSignIn', window.location.pathname);
+    }
+  }, []);
+
+  // After sign-in, redirect if needed
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.hasOwnProperty('Clerk') && (window as any).Clerk?.user) {
+      const redirectPath = localStorage.getItem('redirectAfterSignIn');
+      if (redirectPath) {
+        localStorage.removeItem('redirectAfterSignIn');
+        if (window.location.pathname !== redirectPath) {
+          router.replace(redirectPath);
+        }
+      }
+    }
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -506,7 +526,9 @@ export default function ApplicationFormPage() {
       <SignedOut>
         <div className="text-center py-20">
           <p className="mb-4 text-lg">Please sign in to fill out the application form.</p>
-          <SignInButton mode="modal" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition" />
+          <div className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition inline-block">
+            <SignInButton mode="modal" />
+          </div>
         </div>
       </SignedOut>
     </div>

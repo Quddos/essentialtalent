@@ -73,11 +73,16 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <RegistrationPopup
-                isOpen={isRegistrationOpen}
-                onClose={() => setIsRegistrationOpen(false)}
-                triggerText="Start Your Journey"
-              />
+              <Button
+                asChild
+                variant="primary"
+                size="lg"
+                className="font-bold"
+              >
+                <Link href="/application">
+                  Start Your Journey
+                </Link>
+              </Button>
 
               <Button
                 asChild

@@ -260,7 +260,7 @@ export function Header() {
 
                   <div className="space-y-3 pt-6 border-t">
                     <Button asChild className="w-full bg-transparent" variant="outline">
-                      <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link href="/application" onClick={() => setIsMobileMenuOpen(false)}>
                         Get Started
                       </Link>
                     </Button>
