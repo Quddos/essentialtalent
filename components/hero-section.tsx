@@ -90,9 +90,9 @@ export function HeroSection() {
                 size="lg"
                 className="border-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 bg-transparent"
               >
-                <Link href="/demo">
+                <Link href="/application">
                   <Play className="mr-2 h-5 w-5" />
-                  Book Free Demo
+                  Start your application
                 </Link>
               </Button>
             </motion.div>
