@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Header } from '@/components/header';
+
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -124,7 +124,7 @@ export default function BootcampPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <Header />
+
       
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
