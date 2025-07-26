@@ -64,6 +64,7 @@ const navigation = [
   },
   { name: "About", href: "/about" },
   { name: "Success Stories", href: "/success-stories" },
+  { name: "Bootcamp", href: "/bootcamp" },
  
 ];
 

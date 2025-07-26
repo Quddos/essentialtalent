@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   GraduationCap, 
   Clock, 
@@ -66,6 +67,7 @@ const ukUniversities = [
 
 export default function BootcampPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     gender: '',
@@ -98,7 +100,7 @@ export default function BootcampPage() {
       const data = await response.json();
 
       if (data.success) {
-        toast.success(data.message);
+        setShowSuccessModal(true);
         setFormData({
           fullName: '', gender: '', countryOfOrigin: '', countryWillingToRelocate: '',
           secondarySchoolName: '', universityName: '', isAdmittedToUkUniversity: false,
@@ -133,7 +135,7 @@ export default function BootcampPage() {
           className="text-center mb-12"
         >
           <Badge className="mb-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-            🎓 UK-Ready Bootcamp for Nigerian Students!
+            🎓 UK-Ready Bootcamp for African Students!
           </Badge>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
             2-Week Virtual
@@ -143,7 +145,7 @@ export default function BootcampPage() {
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
             Planning to study in the UK? Get the skills you need before you arrive! 
-            Join our comprehensive bootcamp designed specifically for Nigerian students.
+            Join our comprehensive bootcamp designed specifically for Africa students.
           </p>
         </motion.div>
 
@@ -522,6 +524,42 @@ export default function BootcampPage() {
       </main>
 
       <Footer />
+
+      {/* Success Modal */}
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-green-600">
+              🎉 Registration Successful!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Thank you for registering!
+              </h3>
+              <p className="text-gray-600">
+                Our team will get in touch with you within 24-48 hours with further details about the bootcamp, including:
+              </p>
+              <ul className="text-sm text-gray-600 mt-3 space-y-1">
+                <li>• Confirmation of your registration</li>
+                <li>• Bootcamp schedule and Zoom links</li>
+                <li>• Pre-bootcamp materials and preparation guide</li>
+                <li>• Contact information for your assigned mentor</li>
+              </ul>
+            </div>
+            <Button 
+              onClick={() => setShowSuccessModal(false)}
+              className="w-full bg-green-600 hover:bg-green-700"
+            >
+              Got it!
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 
