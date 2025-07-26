@@ -84,6 +84,29 @@ async function migrate() {
     );
   `;
 
+  // Bootcamp registrations table
+  await sql`
+    CREATE TABLE IF NOT EXISTS bootcamp_registrations (
+      id SERIAL PRIMARY KEY,
+      full_name VARCHAR(255) NOT NULL,
+      gender VARCHAR(20) NOT NULL,
+      country_of_origin VARCHAR(100) NOT NULL,
+      country_willing_to_relocate VARCHAR(100) NOT NULL,
+      secondary_school_name VARCHAR(255) NOT NULL,
+      university_name VARCHAR(255),
+      is_admitted_to_uk_university BOOLEAN DEFAULT FALSE,
+      uk_university_name VARCHAR(255),
+      available_for_virtual_training BOOLEAN DEFAULT FALSE,
+      student_email VARCHAR(255) NOT NULL,
+      parent_guardian_email VARCHAR(255),
+      mobile_number VARCHAR(50) NOT NULL,
+      has_laptop BOOLEAN DEFAULT FALSE,
+      has_internet_access BOOLEAN DEFAULT FALSE,
+      additional_notes TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+
   console.log("Migration complete!");
   process.exit(0);
 }

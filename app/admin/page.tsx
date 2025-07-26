@@ -93,12 +93,27 @@ export default function AdminDashboard() {
   const [addAdminSuccess, setAddAdminSuccess] = useState("")
   const [applications, setApplications] = useState([])
   const [applicationsLoading, setApplicationsLoading] = useState(true)
+  const [bootcampRegistrations, setBootcampRegistrations] = useState([])
+  const [bootcampLoading, setBootcampLoading] = useState(true)
   useEffect(() => {
     fetch("/api/applications")
       .then(res => res.json())
       .then(data => {
         setApplications(data)
         setApplicationsLoading(false)
+      })
+  }, [])
+
+  useEffect(() => {
+    fetch("/api/bootcamp")
+      .then(res => res.json())
+      .then(data => {
+        setBootcampRegistrations(data)
+        setBootcampLoading(false)
+      })
+      .catch(() => {
+        setBootcampRegistrations([])
+        setBootcampLoading(false)
       })
   }, [])
   const [currentAdmin, setCurrentAdmin] = useState<{ email: string; role: string } | null>(null)
@@ -282,9 +297,10 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="applications" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="demos">Demo Bookings</TabsTrigger>
+            <TabsTrigger value="bootcamp">Bootcamp</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
@@ -418,6 +434,96 @@ export default function AdminDashboard() {
                     ))}
                   </TableBody>
                 </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Bootcamp Tab */}
+          <TabsContent value="bootcamp">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Bootcamp Registrations</CardTitle>
+                    <CardDescription>Manage UK-Ready Bootcamp registrations</CardDescription>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button variant="outline" size="sm" onClick={() => {
+                      const ws = XLSX.utils.json_to_sheet(bootcampRegistrations);
+                      const wb = XLSX.utils.book_new();
+                      XLSX.utils.book_append_sheet(wb, ws, 'Bootcamp Registrations');
+                      XLSX.writeFile(wb, 'bootcamp-registrations.xlsx');
+                    }}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Export
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {bootcampLoading ? (
+                  <div className="text-center py-8 text-gray-500">Loading bootcamp registrations...</div>
+                ) : bootcampRegistrations.length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">No bootcamp registrations found.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Gender</TableHead>
+                          <TableHead>Country</TableHead>
+                          <TableHead>Target Country</TableHead>
+                          <TableHead>Email</TableHead>
+                          <TableHead>Phone</TableHead>
+                          <TableHead>UK Admitted</TableHead>
+                          <TableHead>Available</TableHead>
+                          <TableHead>Tech Access</TableHead>
+                          <TableHead>Registered</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {bootcampRegistrations.map((registration: any) => (
+                          <TableRow key={registration.id}>
+                            <TableCell className="font-medium">{registration.full_name}</TableCell>
+                            <TableCell>{registration.gender}</TableCell>
+                            <TableCell>{registration.country_of_origin}</TableCell>
+                            <TableCell>{registration.country_willing_to_relocate}</TableCell>
+                            <TableCell>{registration.student_email}</TableCell>
+                            <TableCell>{registration.mobile_number}</TableCell>
+                            <TableCell>
+                              {registration.is_admitted_to_uk_university ? (
+                                <Badge className="bg-green-100 text-green-800">
+                                  {registration.uk_university_name || 'Yes'}
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-gray-100 text-gray-800">No</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {registration.available_for_virtual_training ? (
+                                <Badge className="bg-green-100 text-green-800">Yes</Badge>
+                              ) : (
+                                <Badge className="bg-red-100 text-red-800">No</Badge>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="space-y-1">
+                                {registration.has_laptop && (
+                                  <Badge className="bg-blue-100 text-blue-800 text-xs">Laptop</Badge>
+                                )}
+                                {registration.has_internet_access && (
+                                  <Badge className="bg-green-100 text-green-800 text-xs">Internet</Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>{new Date(registration.created_at).toLocaleDateString()}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
