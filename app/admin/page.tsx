@@ -119,6 +119,14 @@ export default function AdminDashboard() {
   const [currentAdmin, setCurrentAdmin] = useState<{ email: string; role: string } | null>(null)
   const [adminUsers, setAdminUsers] = useState<any[]>([])
   const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
+  const [passwordChangeData, setPasswordChangeData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordChangeError, setPasswordChangeError] = useState('');
+  const [passwordChangeSuccess, setPasswordChangeSuccess] = useState('');
 
   // Check authentication on component mount
   useEffect(() => {
@@ -189,6 +197,46 @@ export default function AdminDashboard() {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Applications');
     XLSX.writeFile(wb, 'applications.xlsx');
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordChangeError('');
+    setPasswordChangeSuccess('');
+
+    if (passwordChangeData.newPassword !== passwordChangeData.confirmPassword) {
+      setPasswordChangeError('New passwords do not match');
+      return;
+    }
+
+    if (passwordChangeData.newPassword.length < 6) {
+      setPasswordChangeError('New password must be at least 6 characters');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: currentAdmin?.email,
+          currentPassword: passwordChangeData.currentPassword,
+          newPassword: passwordChangeData.newPassword
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setPasswordChangeSuccess('Password changed successfully!');
+        setPasswordChangeData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setTimeout(() => setShowPasswordChange(false), 2000);
+      } else {
+        setPasswordChangeError(data.error || 'Failed to change password');
+      }
+    } catch (error) {
+      setPasswordChangeError('Network error. Please try again.');
+    }
   };
 
   if (!isAuthenticated) {
@@ -546,46 +594,61 @@ export default function AdminDashboard() {
 
           {/* Settings Tab */}
           <TabsContent value="settings">
-            <Card>
-              <CardHeader>
-                <CardTitle>System Settings</CardTitle>
-                <CardDescription>Configure system preferences and settings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
+            <div className="grid gap-6">
+              {/* Current Admin Info */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Account</CardTitle>
+                  <CardDescription>Manage your admin account settings</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium mb-4">Email Notifications</h3>
-                    <div className="space-y-2">
-                      <label className="flex items-center space-x-2">
-                        <input type="checkbox" defaultChecked />
-                        <span>New application notifications</span>
-                      </label>
-                      <label className="flex items-center space-x-2">
-                        <input type="checkbox" defaultChecked />
-                        <span>Demo booking confirmations</span>
-                      </label>
-                      <label className="flex items-center space-x-2">
-                        <input type="checkbox" />
-                        <span>Weekly summary reports</span>
-                      </label>
-                    </div>
+                    <Label>Email</Label>
+                    <p className="text-sm text-gray-600">{currentAdmin?.email}</p>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium mb-4">System Preferences</h3>
+                    <Label>Role</Label>
+                    <p className="text-sm text-gray-600 capitalize">{currentAdmin?.role}</p>
+                  </div>
+                  <Button onClick={() => setShowPasswordChange(true)} variant="outline">
+                    Change Password
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Admin Users Management - Only for Super Admin */}
+              {currentAdmin?.role === 'super_admin' && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Admin Users Management</CardTitle>
+                    <CardDescription>Manage admin users and permissions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
                     <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="timezone">Timezone</Label>
-                        <Input id="timezone" value="Europe/London" readOnly />
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold">All Admin Users</h3>
+                        <Button onClick={() => setShowAddAdmin(true)} size="sm">
+                          Add New Admin
+                        </Button>
                       </div>
-                      <div>
-                        <Label htmlFor="language">Language</Label>
-                        <Input id="language" value="English (UK)" readOnly />
+                      <div className="space-y-2">
+                        {adminUsers.map((admin) => (
+                          <div key={admin.id} className="flex justify-between items-center p-3 border rounded-lg">
+                            <div>
+                              <p className="font-medium">{admin.email}</p>
+                              <p className="text-sm text-gray-600 capitalize">{admin.role}</p>
+                            </div>
+                            <Badge variant={admin.role === 'super_admin' ? 'default' : 'secondary'}>
+                              {admin.role}
+                            </Badge>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
@@ -758,6 +821,58 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+      {/* Password Change Modal */}
+      <Dialog open={showPasswordChange} onOpenChange={setShowPasswordChange}>
+        <DialogContent>
+          <DialogTitle>Change Password</DialogTitle>
+          <form onSubmit={handlePasswordChange} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="currentPassword">Current Password</Label>
+              <Input
+                id="currentPassword"
+                type="password"
+                value={passwordChangeData.currentPassword}
+                onChange={(e) => setPasswordChangeData({...passwordChangeData, currentPassword: e.target.value})}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={passwordChangeData.newPassword}
+                onChange={(e) => setPasswordChangeData({...passwordChangeData, newPassword: e.target.value})}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={passwordChangeData.confirmPassword}
+                onChange={(e) => setPasswordChangeData({...passwordChangeData, confirmPassword: e.target.value})}
+                required
+              />
+            </div>
+            {passwordChangeError && (
+              <p className="text-red-600 text-sm">{passwordChangeError}</p>
+            )}
+            {passwordChangeSuccess && (
+              <p className="text-green-600 text-sm">{passwordChangeSuccess}</p>
+            )}
+            <div className="flex space-x-2">
+              <Button type="submit" className="flex-1">
+                Change Password
+              </Button>
+              <Button type="button" variant="outline" onClick={() => setShowPasswordChange(false)}>
+                Cancel
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
