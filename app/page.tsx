@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { StartApplicationButton } from "@/components/ui/start-application-button"
 import { FlaskConical } from "lucide-react"
 import { motion } from "framer-motion"
+import { TeacherRecruitmentSection } from "@/components/teacher-recruitment-section"
 
 function StemTutoringSection() {
   return (
@@ -68,7 +69,8 @@ export default function HomePage() {
     <main className="min-h-screen">
       {/* <Header /> */}
       <HeroSection />
-      <ServicesSection />
+         <TeacherRecruitmentSection />
+         <ServicesSection />
       <DemoSection />
       <BootcampSection />
       <Footer />
