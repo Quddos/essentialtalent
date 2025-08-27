@@ -64,7 +64,19 @@ export default function TeacherHirePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-green-600 py-32 text-white overflow-hidden">
+      <section className="relative min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-green-900 py-32 text-white overflow-hidden flex items-center">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <Image
+            src="/teacher-hero.jpg"
+            alt="Teaching Excellence"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+        </div>
+
+        {/* Animated Grid Overlay */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.1 }}
@@ -75,36 +87,124 @@ export default function TeacherHirePage() {
             <div key={i} className="border border-white/10 rounded-lg" />
           ))}
         </motion.div>
+
+        {/* Floating Elements */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute inset-0"
+        >
+          {[
+            { icon: "📚", top: "10%", left: "10%", delay: 0.2 },
+            { icon: "🎓", top: "20%", right: "15%", delay: 0.4 },
+            { icon: "✏️", bottom: "25%", left: "15%", delay: 0.6 },
+            { icon: "🌟", bottom: "15%", right: "10%", delay: 0.8 },
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              className="absolute text-4xl"
+              initial={{ opacity: 0, scale: 0, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: item.delay,
+                bounce: 0.5,
+                type: "spring"
+              }}
+              style={{ top: item.top, left: item.left, right: item.right, bottom: item.bottom }}
+            >
+              {item.icon}
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Main Content */}
         <div className="container mx-auto px-4 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-3xl mx-auto text-center"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Elevate Education Through Expert Teaching
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-blue-100">
-              Whether you're a teacher looking for opportunities, seeking certification, 
-              or a school in need of qualified educators, we've got you covered.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button size="lg" variant="secondary" asChild>
-                <a href="#services" className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Explore Services
-                </a>
-              </Button>
-              <Button size="lg" className="bg-green-500 hover:bg-green-600" asChild>
-                <a href="#apply" className="flex items-center gap-2">
-                  <FileCheck className="h-5 w-5" />
-                  Start Application
-                </a>
-              </Button>
-            </div>
-          </motion.div>
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-12"
+            >
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-green-200"
+              >
+                Elevate Education Through Expert Teaching
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-xl md:text-2xl mb-8 text-blue-100"
+              >
+                Whether you're a teacher looking for opportunities, seeking certification, 
+                or a school in need of qualified educators, we've got you covered.
+              </motion.p>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="flex flex-wrap justify-center gap-4"
+              >
+                <Button size="lg" variant="secondary" asChild className="hover:scale-105 transition-transform">
+                  <a href="#services" className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Explore Services
+                  </a>
+                </Button>
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 hover:scale-105 transition-all" 
+                  asChild
+                >
+                  <a href="#apply" className="flex items-center gap-2">
+                    <FileCheck className="h-5 w-5" />
+                    Start Application
+                  </a>
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            {/* Feature Cards */}
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
+            >
+              {[
+                { title: "Expert Teachers", value: "2000+", color: "blue" },
+                { title: "Success Rate", value: "96%", color: "green" },
+                { title: "Partner Schools", value: "500+", color: "yellow" }
+              ].map((stat, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.05 }}
+                  className={`bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center border border-white/20`}
+                >
+                  <div className={`text-3xl font-bold mb-2 text-${stat.color}-300`}>{stat.value}</div>
+                  <div className="text-white/80">{stat.title}</div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        >
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
+            <div className="w-1 h-3 bg-white/60 rounded-full" />
+          </div>
+        </motion.div>
       </section>
 
       {/* Stats Section */}
@@ -123,11 +223,13 @@ export default function TeacherHirePage() {
             </p>
           </motion.div>
 
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-12">
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-12 max-w-3xl mx-auto">
             <Bar 
               data={placementStats}
               options={{
                 responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
                 plugins: {
                   legend: {
                     position: 'top' as const,
@@ -190,7 +292,8 @@ export default function TeacherHirePage() {
                   "Competitive salary packages",
                   "Professional development",
                 ],
-                color: "blue"
+                color: "blue",
+                image: "/teaching.jpg"
               },
               {
                 icon: GraduationCap,
@@ -202,7 +305,8 @@ export default function TeacherHirePage() {
                   "Mentorship program",
                   "Continuous support",
                 ],
-                color: "green"
+                color: "green",
+                image: "/teacher-training.jpg"
               },
               {
                 icon: Building,
@@ -214,7 +318,8 @@ export default function TeacherHirePage() {
                   "Ongoing support",
                   "Quick placement",
                 ],
-                color: "purple"
+                color: "purple",
+                image: "/classroom.jpg"
               }
             ].map((service, index) => (
               <motion.div
@@ -224,13 +329,24 @@ export default function TeacherHirePage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className={`w-12 h-12 rounded-lg bg-${service.color}-100 flex items-center justify-center mb-4`}>
-                      <service.icon className={`h-6 w-6 text-${service.color}-600`} />
+                <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={service.image}
+                      alt={service.title}
+                      fill
+                      className="object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <div className={`w-12 h-12 rounded-lg bg-${service.color}-500/80 backdrop-blur flex items-center justify-center mb-2`}>
+                        <service.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold">{service.title}</h3>
                     </div>
-                    <CardTitle>{service.title}</CardTitle>
-                    <CardDescription>{service.description}</CardDescription>
+                  </div>
+                  <CardHeader>
+                    <CardDescription className="text-lg">{service.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
