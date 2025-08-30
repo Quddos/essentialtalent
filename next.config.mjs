@@ -13,6 +13,13 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
+  // Add configuration for GitHub Codespaces
+  serverActions: {
+    allowedOrigins: [
+      'localhost:3000',
+      '.app.github.dev'
+    ],
+  },
   async headers() {
     return [
       {

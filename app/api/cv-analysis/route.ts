@@ -5,47 +5,124 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+export const maxDuration = 300; // Set maximum duration to 5 minutes
+export const dynamic = 'force-dynamic'; // Disable static optimization
+
 export async function POST(req: Request) {
   try {
+    console.log('Starting CV analysis...')
     const formData = await req.formData()
-    const file = formData.get('file') as File
+    const text = formData.get('text')
     
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    if (!text || typeof text !== 'string') {
+      console.error('No text provided')
+      return NextResponse.json({ error: 'No text provided' }, { status: 400 })
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const text = buffer.toString('utf-8')
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('OpenAI API key not configured')
+      return NextResponse.json({ 
+        error: 'AI analysis is not available at the moment',
+        aiAvailable: false 
+      }, { status: 503 })
+    }
 
-    const analysis = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: `You are an expert CV analyzer for teaching positions in UK schools. 
-          Analyze the CV for teaching qualifications, experience, and suitability for UK teaching.
-          Focus on: 
-          1. Educational qualifications and their UK equivalency
-          2. Teaching experience and its relevance
-          3. Potential fit for UK schools
-          4. Areas for development
-          5. Visa eligibility indicators
-          Provide a structured analysis with clear recommendations.`
-        },
-        {
-          role: "user",
-          content: text
+    console.log('Text received, length:', text.length)
+
+      console.log('Extracted text length:', text.length)
+      
+      if (!text || text.length < 50) {
+        throw new Error('Could not extract sufficient text from the PDF')
+      }
+
+      // Add timeout to the OpenAI request
+      try {
+        // Set a timeout for the OpenAI request
+        const timeoutMs = 60000; // 1 minute timeout
+        const analysisPromise = openai.chat.completions.create({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: `You are an expert CV analyzer for teaching positions in UK schools. 
+              Analyze the CV for teaching qualifications, experience, and suitability for UK teaching.
+              Format your response in clear sections:
+              
+              QUALIFICATIONS SUMMARY:
+              - List and evaluate educational qualifications
+              - Comment on UK equivalency
+              
+              TEACHING EXPERIENCE:
+              - Years of experience
+              - Relevant teaching roles
+              - Key achievements
+              
+              UK SUITABILITY:
+              - Potential fit for UK schools
+              - Strengths for UK education system
+              
+              DEVELOPMENT AREAS:
+              - Required certifications or qualifications
+              - Suggested professional development
+              
+              VISA & ELIGIBILITY:
+              - Potential visa routes
+              - Key requirements to address
+              
+              RECOMMENDATION:
+              - Clear next steps
+              - Suggested teaching roles`
+            },
+            {
+              role: "user",
+              content: text
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 1000
+        });
+
+        // Create a timeout promise
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Analysis timeout')), timeoutMs);
+        });
+
+        // Race between the analysis and the timeout
+        const analysis = await Promise.race([analysisPromise, timeoutPromise]) as OpenAI.Chat.ChatCompletion;
+
+        if (!analysis?.choices?.[0]?.message?.content) {
+          throw new Error('No analysis generated');
         }
-      ],
-    })
 
-    return NextResponse.json({
-      analysis: analysis.choices[0].message.content,
-      success: true
-    })
+        console.log('Analysis completed successfully');
 
-  } catch (error) {
+        return NextResponse.json({
+          analysis: analysis.choices[0].message.content,
+          success: true
+        });
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.message === 'Analysis timeout') {
+            return NextResponse.json({ 
+              error: 'Analysis took too long to complete. Please try again.',
+              retry: true
+            }, { status: 408 });
+          }
+          // Handle rate limits
+          if (error.message.includes('Rate limit')) {
+            return NextResponse.json({ 
+              error: 'Too many requests. Please try again in a few minutes.',
+              retry: true
+            }, { status: 429 });
+          }
+        }
+        throw error; // Re-throw other errors to be caught by the outer try-catch
+      }  } catch (error) {
     console.error('CV Analysis Error:', error)
-    return NextResponse.json({ error: 'Error analyzing CV' }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : 'Error analyzing CV'
+    return NextResponse.json({ 
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? String(error) : undefined 
+    }, { status: 500 })
   }
 }

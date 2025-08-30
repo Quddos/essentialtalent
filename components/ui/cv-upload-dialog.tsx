@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { readFileAsText } from "@/lib/file-utils"
+import { isAIAvailable } from "@/lib/ai-utils"
 import {
   Dialog,
   DialogContent,
@@ -23,19 +25,38 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
   const [file, setFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<string | null>(null)
-  const [step, setStep] = useState<'upload' | 'analyzing' | 'result'>('upload')
+  const [step, setStep] = useState<'upload' | 'analyzing' | 'result' | 'success'>('upload')
+  const [hasAI, setHasAI] = useState<boolean | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
   const router = useRouter()
 
+  useEffect(() => {
+    const checkAI = async () => {
+      const aiAvailable = await isAIAvailable()
+      setHasAI(aiAvailable)
+    }
+    checkAI()
+  }, [])
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
-    if (selectedFile && selectedFile.type === 'application/pdf') {
+    if (!selectedFile) return
+
+    if (selectedFile.type === 'application/pdf' || selectedFile.type === 'text/plain' || selectedFile.type === 'text/rtf' || selectedFile.type === 'application/msword' || selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      if (selectedFile.size > 10 * 1024 * 1024) { // 10MB limit
+        toast({
+          title: "File too large",
+          description: "Please upload a file smaller than 10MB",
+          variant: "destructive",
+        })
+        return
+      }
       setFile(selectedFile)
     } else {
       toast({
         title: "Invalid file type",
-        description: "Please upload a PDF file",
+        description: "Please upload a PDF, TXT, RTF, DOC or DOCX file",
         variant: "destructive",
       })
     }
@@ -51,27 +72,89 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
 
     try {
       setIsUploading(true)
-      setStep('analyzing')
+      setStep(hasAI ? 'analyzing' : 'success')
 
-      const formData = new FormData()
-      formData.append('file', file)
+      if (hasAI) {
+        // AI Analysis path
+        const text = await readFileAsText(file)
+        const formData = new FormData()
+        formData.append('text', text)
 
-      const response = await fetch('/api/cv-analysis', {
+        const response = await fetch('/api/cv-analysis', {
         method: 'POST',
         body: formData,
+        headers: {
+          'Accept': 'application/json',
+        },
       })
 
-      if (!response.ok) throw new Error('Analysis failed')
-
       const data = await response.json()
+
+      if (!response.ok) {
+        // Handle specific error cases
+        if (response.status === 503) {
+          // AI service unavailable, fallback to manual upload
+          setHasAI(false)
+          const uploadResponse = await fetch('/api/cv-upload', {
+            method: 'POST',
+            body: formData,
+          })
+          
+          if (!uploadResponse.ok) {
+            throw new Error('Failed to upload CV')
+          }
+          
+          setStep('success')
+          return
+        }
+        
+        if (response.status === 408 || response.status === 429) {
+          // Timeout or rate limit - show retry option
+          throw new Error(`${data.error} Please try again in a few moments.`)
+        }
+        
+        throw new Error(data.error || 'Analysis failed')
+      }
+      
+      if (!data.analysis) {
+        throw new Error('No analysis result received')
+      }
+
       setAnalysisResult(data.analysis)
       setStep('result')
+      } else {
+        // Non-AI path - simple file upload
+        const formData = new FormData()
+        formData.append('file', file)
 
-    } catch (error) {
+        const response = await fetch('/api/cv-upload', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to upload CV')
+        }
+
+        setStep('success')
+      }
+      
+      toast({
+        title: hasAI ? "Analysis Complete" : "Upload Complete",
+        description: hasAI 
+          ? "Your CV has been successfully analyzed."
+          : "Your CV has been successfully uploaded. Our team will review it shortly.",
+        duration: 3000,
+      })
+
+    } catch (err) {
+      console.error('CV Analysis Error:', err)
+      const error = err as Error
       toast({
         title: "Analysis failed",
-        description: "There was an error analyzing your CV. Please try again.",
+        description: error.message || "There was an error analyzing your CV. Please try again.",
         variant: "destructive",
+        duration: 5000,
       })
       setStep('upload')
     } finally {
@@ -83,9 +166,12 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>AI CV Analysis</DialogTitle>
+          <DialogTitle>{hasAI ? 'AI CV Analysis' : 'CV Upload'}</DialogTitle>
           <DialogDescription>
-            Upload your CV for instant analysis and personalized recommendations for UK teaching opportunities
+            {hasAI 
+              ? 'Upload your CV for instant analysis and personalized recommendations for UK teaching opportunities'
+              : 'Upload your CV and our team will review it for teaching opportunities in UK schools'
+            }
           </DialogDescription>
         </DialogHeader>
 
@@ -164,6 +250,37 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
                 <CalendarDays className="h-4 w-4 mr-2" />
                 Schedule Free Consultation
               </Button>
+            </div>
+          )}
+
+          {step === 'success' && !hasAI && (
+            <div className="space-y-6">
+              <div className="text-center py-8">
+                <div className="mx-auto mb-4 h-12 w-12 text-green-500">
+                  <svg className="h-full w-full" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="12" fill="currentColor" fillOpacity="0.2"/>
+                    <path
+                      fill="currentColor"
+                      d="M7 13l3 3 7-7"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">CV Successfully Uploaded</h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  Our team will review your CV and contact you about suitable teaching opportunities.
+                </p>
+                <Button
+                  className="bg-green-600 hover:bg-green-700"
+                  onClick={handleScheduleAppointment}
+                >
+                  <CalendarDays className="h-4 w-4 mr-2" />
+                  Schedule Free Consultation
+                </Button>
+              </div>
             </div>
           )}
         </div>
