@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import { Bar } from "react-chartjs-2"
+import { CVUploadDialog } from "@/components/ui/cv-upload-dialog"
 import { 
   Chart as ChartJS, 
   CategoryScale, 
@@ -61,6 +62,7 @@ const placementStats = {
 }
 
 export default function TeacherHirePage() {
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false)
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -448,7 +450,11 @@ export default function TeacherHirePage() {
                   />
                 </div>
               </div>
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-green-600 font-semibold w-full">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-blue-600 to-green-600 font-semibold w-full"
+                onClick={() => setIsUploadDialogOpen(true)}
+              >
                 <UploadCloud className="mr-2 h-5 w-5" />
                 Upload Your CV for AI Analysis
               </Button>
@@ -460,11 +466,17 @@ export default function TeacherHirePage() {
       {/* Floating AI CV Button */}
       <Button
         className="fixed bottom-8 left-8 z-50 bg-gradient-to-r from-blue-600 to-green-600 text-white shadow-lg flex items-center gap-2 px-6 py-3 rounded-full hover:scale-105 transition-transform"
-        onClick={() => window.location.href = "#apply"}
+        onClick={() => setIsUploadDialogOpen(true)}
       >
         <UploadCloud className="h-5 w-5" />
         AI: Upload CV & Check Eligibility
       </Button>
+
+      {/* CV Upload Dialog */}
+      <CVUploadDialog
+        isOpen={isUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
+      />
     </div>
   )
 }
