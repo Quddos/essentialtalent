@@ -13,7 +13,7 @@ const tabs = [
     key: "teach", 
     label: "Teach in UK", 
     icon: Users, 
-    video: "/teacher-teach.mp4", 
+    video: "/video/teach-uk.mp4", 
     description: "Launch your teaching career in the UK with comprehensive support and placement services.",
     benefits: [
       "Competitive salary packages starting from £32,000",
@@ -27,7 +27,7 @@ const tabs = [
     key: "learn", 
     label: "Get Qualified", 
     icon: GraduationCap, 
-    video: "/teacher-train.mp4", 
+    video: "/video/get_qualified.mp4", 
     description: "Transform your career with our accredited teacher training programs and QTS certification pathway.",
     benefits: [
       "Recognized QTS qualification",
@@ -41,7 +41,7 @@ const tabs = [
     key: "hire", 
     label: "Recruit Teachers", 
     icon: Briefcase, 
-    video: "/teacher-hire.mp4", 
+    video: "/video/recruit-teacher.mp4", 
     description: "Find exceptional teaching talent for your school through our comprehensive recruitment service.",
     benefits: [
       "Access to qualified international teachers",
