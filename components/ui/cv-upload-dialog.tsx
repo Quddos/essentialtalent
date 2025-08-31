@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { readFileAsText } from "@/lib/file-utils"
 import { isAIAvailable } from "@/lib/ai-utils"
 import {
   Dialog,
@@ -75,29 +74,79 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
       setStep(hasAI ? 'analyzing' : 'success')
 
       if (hasAI) {
-        // AI Analysis path
-        const text = await readFileAsText(file)
+        // AI Analysis path - send file directly to server for processing
         const formData = new FormData()
-        formData.append('text', text)
+        formData.append('file', file)
 
-        const response = await fetch('/api/cv-analysis', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        // Handle specific error cases
-        if (response.status === 503) {
-          // AI service unavailable, fallback to manual upload
-          setHasAI(false)
-          const uploadResponse = await fetch('/api/cv-upload', {
+        try {
+          const response = await fetch('/api/cv-analysis', {
             method: 'POST',
             body: formData,
+            headers: {
+              'Accept': 'application/json',
+            },
+          })
+
+          const data = await response.json()
+
+          if (!response.ok) {
+            // Handle specific error cases
+            if (response.status === 503) {
+              // AI service unavailable, fallback to manual upload
+              console.log('AI service unavailable, falling back to manual upload')
+              setHasAI(false)
+              const uploadFormData = new FormData()
+              uploadFormData.append('file', file)
+              const uploadResponse = await fetch('/api/cv-upload', {
+                method: 'POST',
+                body: uploadFormData,
+              })
+              
+              if (!uploadResponse.ok) {
+                throw new Error('Failed to upload CV')
+              }
+              
+              setStep('success')
+              return
+            }
+            
+            if (response.status === 408 || response.status === 429) {
+              // Timeout or rate limit - fallback to manual upload instead of showing error
+              console.log('AI analysis failed (timeout/quota), falling back to manual upload')
+              setHasAI(false)
+              const uploadFormData = new FormData()
+              uploadFormData.append('file', file)
+              const uploadResponse = await fetch('/api/cv-upload', {
+                method: 'POST',
+                body: uploadFormData,
+              })
+              
+              if (!uploadResponse.ok) {
+                throw new Error('Failed to upload CV')
+              }
+              
+              setStep('success')
+              return
+            }
+            
+            throw new Error(data.error || 'Analysis failed')
+          }
+          
+          if (!data.analysis) {
+            throw new Error('No analysis result received')
+          }
+
+          setAnalysisResult(data.analysis)
+          setStep('result')
+        } catch (aiError) {
+          // If AI analysis fails for any reason, fall back to manual upload
+          console.log('AI analysis failed, falling back to manual upload:', aiError)
+          setHasAI(false)
+          const uploadFormData = new FormData()
+          uploadFormData.append('file', file)
+          const uploadResponse = await fetch('/api/cv-upload', {
+            method: 'POST',
+            body: uploadFormData,
           })
           
           if (!uploadResponse.ok) {
@@ -107,21 +156,6 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
           setStep('success')
           return
         }
-        
-        if (response.status === 408 || response.status === 429) {
-          // Timeout or rate limit - show retry option
-          throw new Error(`${data.error} Please try again in a few moments.`)
-        }
-        
-        throw new Error(data.error || 'Analysis failed')
-      }
-      
-      if (!data.analysis) {
-        throw new Error('No analysis result received')
-      }
-
-      setAnalysisResult(data.analysis)
-      setStep('result')
       } else {
         // Non-AI path - simple file upload
         const formData = new FormData()
@@ -184,7 +218,7 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
               >
                 <input
                   type="file"
-                  accept=".pdf"
+                  accept=".pdf,.doc,.docx,.txt,.rtf"
                   hidden
                   ref={fileInputRef}
                   onChange={handleFileChange}
@@ -193,7 +227,7 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
                 <p className="text-sm text-gray-600 mb-2">
                   Click to upload or drag and drop
                 </p>
-                <p className="text-xs text-gray-500">PDF (max. 10MB)</p>
+                <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT, RTF (max. 10MB)</p>
               </div>
 
               {file && (
@@ -270,11 +304,20 @@ export function CVUploadDialog({ isOpen, onClose }: CVUploadDialogProps) {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">CV Successfully Uploaded</h3>
+                <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                  <h4 className="font-semibold text-blue-900 mb-2">What happens next?</h4>
+                  <ul className="text-sm text-blue-800 space-y-1 text-left">
+                    <li>• Our expert recruitment team will review your CV within 24 hours</li>
+                    <li>• We'll assess your qualifications for UK teaching opportunities</li>
+                    <li>• You'll receive personalized feedback and next steps</li>
+                    <li>• We'll match you with suitable schools and positions</li>
+                  </ul>
+                </div>
                 <p className="text-sm text-gray-600 mb-6">
-                  Our team will review your CV and contact you about suitable teaching opportunities.
+                  Get started faster with a free consultation to discuss your teaching career goals.
                 </p>
                 <Button
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-green-600 hover:bg-green-700 w-full"
                   onClick={handleScheduleAppointment}
                 >
                   <CalendarDays className="h-4 w-4 mr-2" />

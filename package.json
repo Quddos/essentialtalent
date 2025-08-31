@@ -8,7 +8,7 @@
     "lint": "next lint",
     "start": "next start",
     "migrate": "node scripts/migrate.js",
-    "setup": "ts-node scripts/setup-uploads.ts",
+    "setup": "node scripts/setup-uploads.js",
     "postinstall": "npm run setup",
     "test:cv": "ts-node scripts/test-cv-analyzer.ts"
   },

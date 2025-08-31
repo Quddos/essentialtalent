@@ -55,6 +55,13 @@ const teamMembers = [
     linkedin: "https://www.linkedin.com/in/jay-johnson1/",
     bio: "AI strategist focused on leveraging technology to drive innovation and operational excellence.",
   },
+  {
+    name: "Raheem Quddus",
+    position: "Technical Lead Project Manager",
+    image: "/techlead.webp",
+    linkedin: "https://www.linkedin.com/in/quddos/",
+    bio: "Connecting you with the best international routes and opportunities.",
+  },
 ]
 
 const companyValues = [
