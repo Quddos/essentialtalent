@@ -17,7 +17,7 @@ const tabs = [
     description: "Launch your teaching career in the UK with comprehensive support and placement services.",
     benefits: [
       "Competitive salary packages starting from £32,000",
-      "Visa sponsorship assistance",
+      "sponsorship assistance",
       "Relocation support and guidance",
       "Professional development opportunities"
     ],

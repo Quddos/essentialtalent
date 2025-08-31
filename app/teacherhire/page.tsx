@@ -290,7 +290,7 @@ export default function TeacherHirePage() {
                 description: "Start your UK teaching journey with comprehensive support and placement services",
                 features: [
                   "Career counseling and placement",
-                  "Visa sponsorship assistance",
+                  "sponsorship assistance",
                   "Competitive salary packages",
                   "Professional development",
                 ],
