@@ -1,9 +1,14 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
+import { isOpenAIConfigured, getConfig } from '@/lib/env-utils';
 
 export async function GET() {
-  const hasOpenAIKey = !!process.env.OPENAI_API_KEY
-
+  const config = getConfig();
+  
   return NextResponse.json({
-    available: hasOpenAIKey,
-  })
+    available: isOpenAIConfigured(),
+    config: {
+      maxFileSize: config.maxFileSize,
+      allowedFileTypes: config.allowedFileTypes
+    }
+  });
 }

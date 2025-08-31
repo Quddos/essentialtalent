@@ -11,14 +11,20 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['lucide-react']
   },
-  // Add configuration for GitHub Codespaces
-  serverActions: {
-    allowedOrigins: [
-      'localhost:3000',
-      '.app.github.dev'
-    ],
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          }
+        ],
+      },
+    ];
   },
   async headers() {
     return [
