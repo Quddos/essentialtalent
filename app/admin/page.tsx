@@ -345,10 +345,11 @@ export default function AdminDashboard() {
 
         {/* Main Content */}
         <Tabs defaultValue="applications" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="demos">Demo Bookings</TabsTrigger>
             <TabsTrigger value="bootcamp">Bootcamp</TabsTrigger>
+            <TabsTrigger value="cvs">CVs</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
@@ -572,6 +573,19 @@ export default function AdminDashboard() {
                     </Table>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* CVs Tab */}
+          <TabsContent value="cvs">
+            <Card>
+              <CardHeader>
+                <CardTitle>Uploaded CVs</CardTitle>
+                <CardDescription>View and download submitted CVs</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CvsTable />
               </CardContent>
             </Card>
           </TabsContent>
@@ -897,5 +911,60 @@ function ApplicationDocuments({ applicationId }: { applicationId: number }) {
         </li>
       ))}
     </ul>
+  )
+}
+
+function CvsTable() {
+  const [cvs, setCvs] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    fetch('/api/cv-upload')
+      .then(res => res.json())
+      .then(data => {
+        setCvs(Array.isArray(data) ? data : [])
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
+  if (loading) return <div className="text-gray-500">Loading CVs...</div>
+  if (!cvs.length) return <div className="text-gray-500">No CVs found.</div>
+  return (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>File Name</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Size</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Uploaded</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {cvs.map((cv: any) => (
+            <TableRow key={cv.id}>
+              <TableCell className="font-medium">{cv.file_name}</TableCell>
+              <TableCell>{cv.file_type || '-'}</TableCell>
+              <TableCell>{typeof cv.file_size === 'number' ? `${(cv.file_size / 1024).toFixed(1)} KB` : '-'}</TableCell>
+              <TableCell>
+                <Badge className="bg-gray-100 text-gray-800">{cv.analysis_status || 'manual_review'}</Badge>
+              </TableCell>
+              <TableCell>{cv.created_at ? new Date(cv.created_at).toLocaleString() : '-'}</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button asChild size="sm" variant="outline">
+                    <a href={cv.file_url} target="_blank" rel="noopener noreferrer">Open</a>
+                  </Button>
+                  <Button asChild size="sm">
+                    <a href={cv.file_url} download>Download</a>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 }

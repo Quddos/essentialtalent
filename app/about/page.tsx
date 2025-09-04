@@ -309,27 +309,23 @@ export default function AboutPage() {
               </p>
             </motion.div>
 
-            {/* Team Carousel */}
-            <div className="relative overflow-hidden">
+            {/* Team Carousel with auto and manual scroll */}
+            <div className="relative overflow-x-auto">
               <motion.div
-                className="flex gap-6"
-                animate={{ x: [0, -100 * (teamMembers.length - 3)] }}
-                transition={{
-                  duration: 20,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: "linear",
-                }}
+                className="flex gap-6 w-max"
+                animate={{ x: [0, -320 * teamMembers.length, 0] }}
+                transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
               >
                 {[...teamMembers, ...teamMembers].map((member, index) => (
                   <motion.div
                     key={`${member.name}-${index}`}
-                    className="flex-shrink-0 w-80"
+                    className="flex-shrink-0 w-72 sm:w-80"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
                   >
                     <Card className="h-full">
                       <CardContent className="p-6 text-center">
-                        <div className="relative w-32 h-32 mx-auto mb-4">
+                        <div className="relative w-28 h-28 sm:w-32 sm:h-32 mx-auto mb-4">
                           <Image
                             src={member.image || "/placeholder.svg"}
                             alt={member.name}
@@ -337,7 +333,7 @@ export default function AboutPage() {
                             className="object-cover rounded-full"
                           />
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{member.name}</h3>
+                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-1">{member.name}</h3>
                         <p className="text-blue-600 dark:text-blue-400 font-medium mb-3">{member.position}</p>
                         <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{member.bio}</p>
                         <Button asChild variant="outline" size="sm">

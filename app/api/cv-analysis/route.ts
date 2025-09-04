@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { put } from '@vercel/blob'
+import { neon } from '@neondatabase/serverless'
+
+if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set")
+const sql = neon(process.env.DATABASE_URL)
 
 const getOpenAIClient = () => {
   const apiKey = process.env.OPENAI_API_KEY
