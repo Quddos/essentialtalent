@@ -59,7 +59,7 @@ const teamMembers = [
     name: "Toyosi Olaniyi",
     position: "Director of Health & Strategic Partnerships",
     image: "/Director_of_Health_&_Strategic_Partnerships.jpg",
-    linkedin: "/",
+    linkedin: "#",
     bio: "Medical doctor and global health practitioner bringing strategic insight into education, recruitment, and wellbeing partnerships.",
   },
   {
@@ -344,7 +344,7 @@ export default function AboutPage() {
                         <p className="text-blue-600 dark:text-blue-400 font-medium mb-3">{member.position}</p>
                         <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">{member.bio}</p>
                         <Button asChild variant="outline" size="sm">
-                          <Link href={member.linkedin} target="_blank">
+                          <Link href={member.linkedin ?? "#"} target="_blank">
                             <Linkedin className="mr-2 h-4 w-4" />
                             LinkedIn
                           </Link>
