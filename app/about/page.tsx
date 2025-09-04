@@ -57,7 +57,7 @@ const teamMembers = [
   },
   {
     name: "Toyosi Olaniyi",
-    position: "Director of Health & Strategic Partnerships",
+    position: "Director of Health & Workforce Development",
     image: "/Director_of_Health_&_Strategic_Partnerships.jpg",
     linkedin: "#",
     bio: "Medical doctor and global health practitioner bringing strategic insight into education, recruitment, and wellbeing partnerships.",
