@@ -56,6 +56,13 @@ const teamMembers = [
     bio: "AI strategist focused on leveraging technology to drive innovation and operational excellence.",
   },
   {
+    name: "Toyosi Olaniyi",
+    position: "Director of Health & Strategic Partnerships",
+    image: "/Director_of_Health_&_Strategic_Partnerships.jpg",
+    linkedin: "/",
+    bio: "Medical doctor and global health practitioner bringing strategic insight into education, recruitment, and wellbeing partnerships.",
+  },
+  {
     name: "Raheem Quddus",
     position: "Technical Lead Project Manager",
     image: "/techlead.webp",
