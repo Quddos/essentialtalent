@@ -38,8 +38,8 @@ const footerLinks = {
     { name: "Contact Us", href: "/contact" },
     { name: "FAQ", href: "#" },
     { name: "Help Center", href: "#" },
-    { name: "Privacy Policy", href: "#" },
-    { name: "Terms of Service", href: "#" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms & Conditions", href: "/terms-and-conditions" },
   ],
   resources: [
     { name: "UK University Guide", href: "#" },
@@ -235,11 +235,11 @@ export function Footer() {
               © {new Date().getFullYear()} Essential Talent Recruitment Ltd. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm">
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+              <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                Terms of Service
+              <Link href="/terms-and-conditions" className="text-gray-400 hover:text-white transition-colors">
+                Terms & Conditions
               </Link>
               <Link href="/cookies" className="text-gray-400 hover:text-white transition-colors">
                 Cookie Policy
