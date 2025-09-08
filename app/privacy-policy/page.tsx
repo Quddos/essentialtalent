@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
       <ul className="list-disc pl-6 mb-4">
         <li>Personal identification details: name, email address, phone number, date of birth.</li>
         <li>Professional details: CVs/resumes, qualifications, employment history, references.</li>
-        <li>Application details: visa status, job preferences, education records.</li>
+        <li>Application details: job preferences, education records.</li>
         <li>Technical data: IP address, browser type, cookies, and usage data.</li>
       </ul>
       <h2 className="text-xl font-semibold mt-8 mb-2">3. How We Use Your Information</h2>
