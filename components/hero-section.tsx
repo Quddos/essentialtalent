@@ -22,12 +22,12 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
 
       {/* Floating Elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full blur-xl opacity-70 animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl opacity-70 animate-pulse delay-1000"></div>
-      <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-purple-200 rounded-full blur-xl opacity-70 animate-pulse delay-500"></div>
+      <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full blur-xl opacity-70 animate-pulse pointer-events-none"></div>
+      <div className="absolute bottom-20 right-10 w-32 h-32 bg-green-200 rounded-full blur-xl opacity-70 animate-pulse delay-1000 pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-purple-200 rounded-full blur-xl opacity-70 animate-pulse delay-500 pointer-events-none"></div>
 
       <div className="container mx-auto px-4 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -94,6 +94,15 @@ export function HeroSection() {
                   <Play className="mr-2 h-5 w-5" />
                   Book Free Session
                 </Link>
+              </Button>
+
+              <Button
+                asChild
+                variant="secondary"
+                size="lg"
+                className="font-bold"
+              >
+                <Link href="/teacherhire">Teacher Hire</Link>
               </Button>
             </motion.div>
 
@@ -175,7 +184,7 @@ export function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 pointer-events-none"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}

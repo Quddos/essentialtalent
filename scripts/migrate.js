@@ -107,6 +107,21 @@ async function migrate() {
     );
   `;
 
+  // CV uploads table
+  await sql`
+    CREATE TABLE IF NOT EXISTS cv_uploads (
+      id SERIAL PRIMARY KEY,
+      file_name VARCHAR(255) NOT NULL,
+      file_url TEXT NOT NULL,
+      file_size INTEGER,
+      file_type VARCHAR(100),
+      analysis_result TEXT,
+      analysis_status VARCHAR(50) DEFAULT 'pending',
+      uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      user_info JSONB
+    );
+  `;
+
   console.log("Migration complete!");
   process.exit(0);
 }

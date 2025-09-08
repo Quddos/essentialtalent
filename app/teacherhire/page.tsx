@@ -290,7 +290,7 @@ export default function TeacherHirePage() {
                 description: "Start your UK teaching journey with comprehensive support and placement services",
                 features: [
                   "Career counseling and placement",
-                  "Visa sponsorship assistance",
+                  "sponsorship assistance",
                   "Competitive salary packages",
                   "Professional development",
                 ],
@@ -442,7 +442,7 @@ export default function TeacherHirePage() {
                 </div>
                 <div>
                   <Image
-                    src="/placeholder.jpg"
+                    src="/teach.jpg"
                     alt="AI Matching Process"
                     width={400}
                     height={300}
@@ -456,7 +456,7 @@ export default function TeacherHirePage() {
                 onClick={() => setIsUploadDialogOpen(true)}
               >
                 <UploadCloud className="mr-2 h-5 w-5" />
-                Upload Your CV for AI Analysis
+                Upload Your CV
               </Button>
             </CardContent>
           </Card>
@@ -469,7 +469,7 @@ export default function TeacherHirePage() {
         onClick={() => setIsUploadDialogOpen(true)}
       >
         <UploadCloud className="h-5 w-5" />
-        AI: Upload CV & Check Eligibility
+        Upload CV & Check Eligibility
       </Button>
 
       {/* CV Upload Dialog */}
