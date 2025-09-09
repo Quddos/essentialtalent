@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
         <li>We do not sell or rent your personal data to third parties.</li>
       </ul>
       <h2 className="text-xl font-semibold mt-8 mb-2">6. Data Retention</h2>
-      <p className="mb-4">We retain your personal information only for as long as necessary to fulfil the purposes outlined in this policy, or as required by law. Candidates may request deletion of their data at any time (see Section 9).</p>
+      <p className="mb-4">We retain your personals information only for as long as necessary to fulfil the purposes outlined in this policy, or as required by law. Candidates may request deletion of their data at any time (see Section 9).</p>
       <h2 className="text-xl font-semibold mt-8 mb-2">7. Data Security</h2>
       <p className="mb-4">We implement appropriate technical and organizational measures to protect your data from unauthorized access, disclosure, alteration, or destruction.</p>
       <h2 className="text-xl font-semibold mt-8 mb-2">8. International Transfers</h2>
