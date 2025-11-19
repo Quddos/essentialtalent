@@ -1,24 +1,26 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog"
 
 const videoStories = [
-  { id: 1, type: "video", title: "IELTS Success - Aisha", url: "https://www.youtube.com/embed/nkB_iieAmP0", thumbnail: "/hero-students.jpg", description: "Aisha shares her journey to IELTS success with Essential Talent." },
-  { id: 2, type: "video", title: "UK Teacher Placement - John", url: "https://www.youtube.com/embed/ysz5S6PUM-U", thumbnail: "/placeholder-user.jpg", description: "John's story of becoming a teacher in the UK." },
-  { id: 3, type: "video", title: "Visa Journey - Priya", url: "https://www.youtube.com/embed/ScMzIvxBSi4", thumbnail: "/placeholder.jpg", description: "Priya's successful UK visa application experience." },
-  { id: 4, type: "video", title: "Student Success - Chen", url: "https://www.youtube.com/embed/jNQXAC9IVRw", thumbnail: "/hero-students.jpg", description: "Chen's academic achievements in the UK." },
-  { id: 5, type: "video", title: "Career Growth - Fatima", url: "https://www.youtube.com/embed/tgbNymZ7vqY", thumbnail: "/placeholder-user.jpg", description: "Fatima's career growth story with Essential Talent." },
+  { id: 1, type: "video", title: "Success Story - Y-pS3pzDPNU", url: "https://www.youtube.com/embed/Y-pS3pzDPNU", watchUrl: "https://www.youtube.com/watch?v=Y-pS3pzDPNU", thumbnail: "https://img.youtube.com/vi/Y-pS3pzDPNU/hqdefault.jpg", description: "YouTube video from the channel." },
+  { id: 2, type: "video", title: "Success Story - qqJhYmt6N-M", url: "https://www.youtube.com/embed/qqJhYmt6N-M", watchUrl: "https://www.youtube.com/watch?v=qqJhYmt6N-M", thumbnail: "https://img.youtube.com/vi/qqJhYmt6N-M/hqdefault.jpg", description: "YouTube video from the channel." },
+  { id: 3, type: "video", title: "Success Story - nkB_iieAmP0", url: "https://www.youtube.com/embed/nkB_iieAmP0", watchUrl: "https://www.youtube.com/watch?v=nkB_iieAmP0", thumbnail: "https://img.youtube.com/vi/nkB_iieAmP0/hqdefault.jpg", description: "YouTube video from the channel." },
+  { id: 4, type: "video", title: "Success Story - mF6PHkQflWs", url: "https://www.youtube.com/embed/mF6PHkQflWs?start=28", watchUrl: "https://www.youtube.com/watch?v=mF6PHkQflWs&t=28s", thumbnail: "https://img.youtube.com/vi/mF6PHkQflWs/hqdefault.jpg", description: "YouTube video (starts at 28s)." },
+  { id: 5, type: "video", title: "Success Story - rWewirW4Jpo", url: "https://www.youtube.com/embed/rWewirW4Jpo", watchUrl: "https://www.youtube.com/watch?v=rWewirW4Jpo", thumbnail: "https://img.youtube.com/vi/rWewirW4Jpo/hqdefault.jpg", description: "YouTube video from the channel." },
+  { id: 6, type: "video", title: "Success Story - 3mxzUESWNN8", url: "https://www.youtube.com/embed/3mxzUESWNN8?start=37", watchUrl: "https://www.youtube.com/watch?v=3mxzUESWNN8&t=37s", thumbnail: "https://img.youtube.com/vi/3mxzUESWNN8/hqdefault.jpg", description: "YouTube video (starts at 37s)." },
+  { id: 7, type: "video", title: "Success Story - 9Klcv8rk3ic", url: "https://www.youtube.com/embed/9Klcv8rk3ic", watchUrl: "https://www.youtube.com/watch?v=9Klcv8rk3ic", thumbnail: "https://img.youtube.com/vi/9Klcv8rk3ic/hqdefault.jpg", description: "YouTube video from the channel." },
 ]
 
 const imageStories = [
-  { id: 6, type: "image", title: "Award Ceremony", src: "/hero-students.jpg", effect: "fade", description: "Celebrating our students' achievements." },
-  { id: 7, type: "image", title: "Graduation Day", src: "/placeholder-user.jpg", effect: "zoom", description: "A proud graduation moment." },
-  { id: 8, type: "image", title: "First Day in UK", src: "/placeholder.jpg", effect: "slide", description: "Excitement on the first day in the UK." },
-  { id: 9, type: "image", title: "Team Success", src: "/logo.png", effect: "rotate", description: "Our team celebrating a milestone." },
-  { id: 10, type: "image", title: "Celebration", src: "/ceo.jpeg", effect: "scale", description: "A joyful celebration with our CEO." },
+  { id: 101, type: "image", title: "Award Ceremony", src: "/hero-students.jpg", effect: "fade", description: "Celebrating our students' achievements." },
+  { id: 102, type: "image", title: "Graduation Day", src: "/placeholder-user.jpg", effect: "zoom", description: "A proud graduation moment." },
+  { id: 103, type: "image", title: "First Day in UK", src: "/placeholder.jpg", effect: "slide", description: "Excitement on the first day in the UK." },
+  { id: 104, type: "image", title: "Team Success", src: "/logo.png", effect: "rotate", description: "Our team celebrating a milestone." },
+  { id: 105, type: "image", title: "Celebration", src: "/ceo.jpeg", effect: "scale", description: "A joyful celebration with our CEO." },
 ]
 
 const filters = ["All", "Videos", "Images"]
@@ -107,13 +109,9 @@ export default function SuccessStoriesPage() {
                     {selectedStory && selectedStory.id === story.id && (
                       <div className="relative w-full aspect-video bg-black flex flex-col items-center justify-center">
                         {story.type === "video" ? (
-                          <iframe
-                            src={story.url}
-                            title={story.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-96 object-cover"
-                          ></iframe>
+                          <>
+                            <YouTubePlayer story={story} />
+                          </>
                         ) : (
                           <motion.img
                             src={story.src}
@@ -170,3 +168,129 @@ function AnimatedImageCard({ story }: { story: any }) {
     </motion.div>
   )
 } 
+
+function YouTubePlayer({ story }: { story: any }) {
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const playerRef = useRef<any>(null)
+  const [errorCode, setErrorCode] = useState<number | null>(null)
+
+  // Helper: extract videoId from watchUrl or embed URL
+  function extractVideoId(s: string) {
+    try {
+      const u = new URL(s)
+      if (u.hostname.includes('youtube')) {
+        if (u.pathname.startsWith('/watch')) return u.searchParams.get('v')
+        if (u.pathname.startsWith('/embed/')) return u.pathname.split('/embed/')[1].split('?')[0]
+      }
+    } catch (e) {}
+    // fallback: regex
+    const m = s.match(/(youtu\.be\/|v=|embed\/)([A-Za-z0-9_-]{6,})/)
+    return m ? m[2] : null
+  }
+
+  useEffect(() => {
+    const videoId = extractVideoId(story.watchUrl || story.url)
+    if (!videoId) return
+
+    let mounted = true
+
+    function ensureApiLoaded(): Promise<void> {
+      return new Promise((resolve) => {
+        if ((window as any).YT && (window as any).YT.Player) return resolve()
+        // If script already added, poll until YT is ready
+        if (document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+          const i = setInterval(() => {
+            if ((window as any).YT && (window as any).YT.Player) {
+              clearInterval(i)
+              resolve()
+            }
+          }, 100)
+          return
+        }
+        const tag = document.createElement('script')
+        tag.src = 'https://www.youtube.com/iframe_api'
+        document.body.appendChild(tag)
+        const i = setInterval(() => {
+          if ((window as any).YT && (window as any).YT.Player) {
+            clearInterval(i)
+            resolve()
+          }
+        }, 100)
+      })
+    }
+
+    ensureApiLoaded().then(() => {
+      if (!mounted) return
+      const startSeconds = (() => {
+        try {
+          const u = new URL(story.url)
+          return Number(u.searchParams.get('start')) || 0
+        } catch (e) {
+          return 0
+        }
+      })()
+
+      // create player
+      playerRef.current = new (window as any).YT.Player(containerRef.current, {
+        height: '360',
+        width: '640',
+        videoId,
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+          start: startSeconds,
+          modestbranding: 1,
+        },
+        events: {
+          onError: (e: any) => {
+            // e.data contains the error code
+            setErrorCode(e.data)
+          },
+        },
+      })
+    })
+
+    return () => {
+      mounted = false
+      try {
+        if (playerRef.current && playerRef.current.destroy) playerRef.current.destroy()
+      } catch (e) {}
+    }
+  }, [story])
+
+  // Known YouTube embed error codes: 2, 5, 100, 101, 150
+  const blockedEmbed = errorCode === 101 || errorCode === 150
+
+  return (
+    <div className="w-full">
+      <div ref={containerRef} className="w-full h-96 bg-black flex items-center justify-center" />
+      {blockedEmbed ? (
+        <div className="p-4 bg-yellow-50 dark:bg-yellow-900 text-center">
+          <p className="text-sm text-yellow-900 dark:text-yellow-200 mb-2">Embedding is disabled for this video. It cannot be played inline.</p>
+          <a
+            href={story.watchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+          >
+            Watch on YouTube
+          </a>
+        </div>
+      ) : errorCode ? (
+        <div className="p-4 bg-gray-50 dark:bg-gray-900 text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">There was an issue playing the video (error code {String(errorCode)}).</p>
+          <a
+            href={story.watchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+          >
+            Watch on YouTube
+          </a>
+        </div>
+      ) : (
+        <div className="p-2 text-center text-sm text-gray-500">If playback doesn't start, use the button below.</div>
+      )}
+    </div>
+  )
+}
