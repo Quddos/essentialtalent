@@ -3,68 +3,9 @@
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { GraduationCap, Users, Globe, BookOpen, Briefcase, Video, ArrowRight, CheckCircle, FlaskConical } from "lucide-react"
+import { ArrowRight, CheckCircle } from "lucide-react"
 import Link from "next/link"
-
-const services = [
-  {
-    icon: GraduationCap,
-    title: "UK Study Routes",
-    description: "Complete guidance for studying in the UK with visa assistance and university placement.",
-    features: ["University Applications", "Visa Support", "Accommodation Help", "Pre-departure Briefing"],
-    color: "from-blue-500 to-blue-600",
-  },
-  {
-    icon: Briefcase,
-    title: "Work Visa Assistance",
-    description: "Professional support for UK work visas and job placement services.",
-    features: ["Skilled Worker Visa", "Job Matching", "CV Enhancement", "Interview Preparation"],
-    color: "from-green-500 to-green-600",
-  },
-  {
-    icon: Users,
-    title: "Teacher Recruitment",
-    description: "Specialized recruitment services for qualified teachers seeking UK opportunities.",
-    features: ["QTS Support", "School Partnerships", "Relocation Assistance", "Career Development"],
-    color: "from-purple-500 to-purple-600",
-  },
-  {
-    icon: Video,
-    title: "Online Tutoring",
-    description: "Professional online and home tutoring services across various subjects.",
-    features: ["1-on-1 Sessions", "Group Classes", "Flexible Scheduling", "Progress Tracking"],
-    color: "from-orange-500 to-orange-600",
-  },
-  {
-    icon: BookOpen,
-    title: "Education Consulting",
-    description: "Expert educational consulting and career guidance services.",
-    features: ["Career Counseling", "Course Selection", "Scholarship Guidance", "Academic Planning"],
-    color: "from-teal-500 to-teal-600",
-  },
-  {
-    icon: Globe,
-    title: "International Services",
-    description: "Comprehensive international education and migration services.",
-    features: ["Global Partnerships", "Cultural Integration", "Language Support", "Ongoing Support"],
-    color: "from-indigo-500 to-indigo-600",
-  },
-  // {
-  //   icon: FlaskConical,
-  //   title: "Tutoring & Consulting: GCSE & A Level STEM Courses & Exams",
-  //   description:
-  //     "Expert guidance and personalized tutoring for GCSE and A Level STEM subjects. We help students excel in exams, master coursework, and build a strong foundation in science, technology, engineering, and mathematics.",
-  //   features: [
-  //     "1-on-1 STEM Tutoring",
-  //     "GCSE & A Level Exam Prep",
-  //     "Coursework & Revision Support",
-  //     "Consulting for Academic Success",
-  //     "Maths, Physics, Chemistry, Biology",
-  //     "Study Skills & Motivation"
-  //   ],
-  //   color: "from-pink-500 to-purple-600",
-  // },
-]
+import services from "@/components/services-data"
 
 export function ServicesSection() {
   return (
@@ -98,7 +39,7 @@ export function ServicesSection() {
               className="group"
             >
               <Card className="h-full border-0 shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800">
-                <CardHeader className="pb-4">
+                  <CardHeader className="pb-4">
                   <div
                     className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${service.color} p-4 mb-4 group-hover:scale-110 transition-transform duration-300`}
                   >
@@ -121,7 +62,7 @@ export function ServicesSection() {
                     variant="outline"
                     className="w-full group-hover:bg-blue-50 dark:group-hover:bg-blue-900 transition-colors"
                   >
-                    <Link href="#" className="flex items-center justify-center">
+                    <Link href={`/services/${service.slug}`} className="flex items-center justify-center">
                       Learn More
                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>

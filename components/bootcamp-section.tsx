@@ -164,7 +164,7 @@ export function BootcampSection() {
                   <p className="text-blue-100">
                     Join hundreds of successful students who have prepared for UK education with our bootcamp.
                   </p>
-                  <Button
+                  {/* <Button
                     asChild
                     size="lg"
                     className="bg-white text-blue-600 hover:bg-gray-100 font-semibold"
@@ -173,7 +173,7 @@ export function BootcampSection() {
                       Register Now
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
-                  </Button>
+                  </Button> */}
                 </div>
               </CardContent>
             </Card>
