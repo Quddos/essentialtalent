@@ -15,25 +15,61 @@ const videoStories = [
   { id: 7, type: "video", title: "Success Story - 9Klcv8rk3ic", url: "https://www.youtube.com/embed/9Klcv8rk3ic", watchUrl: "https://www.youtube.com/watch?v=9Klcv8rk3ic", thumbnail: "https://img.youtube.com/vi/9Klcv8rk3ic/hqdefault.jpg", description: "YouTube video from the channel." },
 ]
 
-const imageStories = [
-  { id: 101, type: "image", title: "Award Ceremony", src: "/hero-students.jpg", effect: "fade", description: "Celebrating our students' achievements." },
-  { id: 102, type: "image", title: "Graduation Day", src: "/placeholder-user.jpg", effect: "zoom", description: "A proud graduation moment." },
-  { id: 103, type: "image", title: "First Day in UK", src: "/placeholder.jpg", effect: "slide", description: "Excitement on the first day in the UK." },
-  { id: 104, type: "image", title: "Team Success", src: "/logo.png", effect: "rotate", description: "Our team celebrating a milestone." },
-  { id: 105, type: "image", title: "Celebration", src: "/ceo.jpeg", effect: "scale", description: "A joyful celebration with our CEO." },
-]
+// imageStories will be fetched from Pexels API via `/api/pexels`
 
 const filters = ["All", "Videos", "Images"]
 
 export default function SuccessStoriesPage() {
   const [filter, setFilter] = useState("All")
   const [selectedStory, setSelectedStory] = useState(null)
+  const [imageStories, setImageStories] = useState<any[]>([])
+  const [imagesLoading, setImagesLoading] = useState(false)
+  const [imagesError, setImagesError] = useState<string | null>(null)
   const stories =
     filter === "All"
       ? [...videoStories, ...imageStories]
       : filter === "Videos"
       ? videoStories
       : imageStories
+
+  useEffect(() => {
+    // fetch 7 education/student/graduation images from our API route
+    async function loadImages() {
+      setImagesLoading(true)
+      setImagesError(null)
+      try {
+        const res = await fetch('/api/pexels?query=education students graduation&per_page=7')
+        if (!res.ok) throw new Error(`Failed to fetch images: ${res.status}`)
+        const data = await res.json()
+        const photos = (data.photos || []).map((p: any, i: number) => ({
+          id: 1000 + i,
+          type: 'image',
+          title: `Student Photo ${i + 1}`,
+          src: p.src,
+          effect: ['fade','zoom','slide','rotate','scale'][i % 5],
+          description: `Photo by ${p.photographer}`,
+        }))
+        setImageStories(photos)
+      } catch (err: any) {
+        setImagesError(String(err))
+        // Fallback: use a set of online Unsplash images that align with education/student/graduation
+        const fallback = [
+          'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1517354441477-5f05b9101f12?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1200&q=80',
+          'https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=1200&q=80',
+        ].map((src, i) => ({ id: 2000 + i, type: 'image', title: `Student Photo ${i + 1}`, src, effect: ['fade','zoom','slide','rotate','scale'][i % 5], description: 'Student / graduation photo' }))
+        setImageStories(fallback)
+      } finally {
+        setImagesLoading(false)
+      }
+    }
+
+    loadImages()
+  }, [])
 
   return (
     <div className="min-h-screen py-20 bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
