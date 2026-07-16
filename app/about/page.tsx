@@ -13,7 +13,7 @@ import { Linkedin, Users, Target, Globe, Heart } from "lucide-react"
 const pageMetadata = {
   title: "About Us - Essential Talent Recruitment",
   description:
-    "Learn about Essential Talent Recruitment's mission to connect talented individuals with UK education and career opportunities. Meet our founder Eng. Oluwafemi Victoria and our expert team.",
+    "Learn about Essential Talent Recruitment's mission to connect talented individuals with UK education and career opportunities. Meet our founder Engr. Oluwafemi Victoria and our expert team.",
   keywords:
     "about essential talent recruitment, UK education consultancy, international recruitment company, Dr Sarah Johnson CEO, UK immigration experts",
   openGraph: {
@@ -26,7 +26,7 @@ const pageMetadata = {
 
 const teamMembers = [
   {
-    name: "Eng. Oluwafemi Victoria",
+    name: "Engr. Oluwafemi Victoria",
     position: "Chief Executive Officer",
     image: "/ceo.jpeg",
     linkedin: "https://www.linkedin.com/in/victoria-oluwafemi-2b19a2280/",
@@ -114,7 +114,7 @@ export default function AboutPage() {
                 "Leading UK recruitment company helping talented individuals achieve their dreams through study, work, and career opportunities.",
               founder: {
                 "@type": "Person",
-                name: "Eng. Oluwafemi Victoria",
+                name: "Engr. Oluwafemi Victoria",
                 jobTitle: "Chief Executive Officer",
                 image: "https://www.essentialtalent.co/ceo.jpg",
               },
@@ -271,12 +271,12 @@ export default function AboutPage() {
                     </div>
                     <div className="p-8 md:p-12 flex flex-col justify-center">
                       <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                        Eng. Oluwafemi Victoria
+                        Engr. Oluwafemi Victoria
                       </h3>
                       <p className="text-blue-600 dark:text-blue-400 font-semibold mb-4">CEO & Founder</p>
                       <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-6">
                         <p>
-                          With over 15 years of experience in international education and recruitment, Dr. Johnson
+                          With over 15 years of experience in international education and recruitment, Engr. Oluwafemi
                           founded Essential Talent Recruitment with a simple yet powerful vision: to make quality UK
                           education accessible to talented individuals worldwide.
                         </p>
