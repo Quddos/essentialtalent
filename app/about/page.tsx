@@ -281,7 +281,7 @@ export default function AboutPage() {
                           education accessible to talented individuals worldwide.
                         </p>
                         <p>
-                          Her expertise in educational policy, combined with a deep understanding of the challenges
+                          Her expertise in educational policy, combined with a deep understanding of the challenge
                           faced by international students and professionals, has shaped our comprehensive approach to
                           recruitment and support services.
                         </p>
